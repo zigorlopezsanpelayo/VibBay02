@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity
                                     .replace(R.id.content_main, fragmentoLogin)
                                     .commit();
 
+
                             menuItem.setChecked(true);
                             getSupportActionBar().setTitle(menuItem.getTitle());
                         }
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity
                         return true;
                     }
                 });
+
     }
 
     @Override
@@ -126,17 +129,34 @@ public class MainActivity extends AppCompatActivity
 
     public void ponerFragBusqueda() {
         boolean fragmentTransaction = false;
-        Fragment fragment = null;
+        Fragment fragmentoBusqueda = null;
 
-        fragment = new FragmentoBuscar();
+        fragmentoBusqueda = new FragmentoBuscar();
         fragmentTransaction = true;
 
         if(fragmentTransaction) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_main, fragment)
+                    .replace(R.id.content_main, fragmentoBusqueda)
                     .commit();
 
             getSupportActionBar().setTitle("Buscar");
         }
     }
+
+    public void ponerFragPrincipal() {
+        boolean fragmentTransaction = false;
+        Fragment fragmentoPrincipal = null;
+
+        fragmentoPrincipal = new FragmentoPrincipal();
+        fragmentTransaction = true;
+
+        if(fragmentTransaction) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_main, fragmentoPrincipal)
+                    .commit();
+
+            getSupportActionBar().setTitle("VibBayZA");
+        }
+    }
+
 }

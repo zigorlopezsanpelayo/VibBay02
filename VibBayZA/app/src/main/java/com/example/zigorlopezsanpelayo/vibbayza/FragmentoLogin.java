@@ -1,9 +1,7 @@
 package com.example.zigorlopezsanpelayo.vibbayza;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,9 +34,10 @@ public class FragmentoLogin extends Fragment {
 
                     @Override
                     public void onClick(View v) {
-                        
+                        ((MainActivity) getActivity()).ponerFragPrincipal();
                     }
                 });
         return vista;
     }
+
 }
