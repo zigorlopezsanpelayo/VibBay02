@@ -31,6 +31,11 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        Fragment fragmentoPrincipal = new FragmentoPrincipal();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content_main, fragmentoPrincipal)
+                .commit();
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -40,18 +45,18 @@ public class MainActivity extends AppCompatActivity
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
 
                         boolean fragmentTransaction = false;
-                        Fragment fragment = null;
+                        Fragment fragmentoLogin = null;
 
                         switch (menuItem.getItemId()) {
                             case R.id.login:
-                                fragment = new FragmentoLogin();
+                                fragmentoLogin = new FragmentoLogin();
                                 fragmentTransaction = true;
                                 break;
                         }
 
                         if(fragmentTransaction) {
                             getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.content_main, fragment)
+                                    .replace(R.id.content_main, fragmentoLogin)
                                     .commit();
 
                             menuItem.setChecked(true);

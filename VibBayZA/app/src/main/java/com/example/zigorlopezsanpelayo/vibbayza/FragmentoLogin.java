@@ -1,10 +1,14 @@
 package com.example.zigorlopezsanpelayo.vibbayza;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 public class FragmentoLogin extends Fragment {
 
@@ -18,15 +22,23 @@ public class FragmentoLogin extends Fragment {
         // Inflate the layout for this fragment
         View vista =  inflater.inflate(R.layout.fragmento_login, container, false);
 
-        ((Button) vista.findViewById(R.id.aceptar))
-                .setOnClickListener(new OnClickListener() {
+        ((Button) vista.findViewById(R.id.boton_aceptar))
+                .setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
-                        pulsadoBoton(v);
+                        Log.i("String", "Comprobar datos en BD Fierbase");
                     }
                 });
 
+        ((Button) vista.findViewById(R.id.boton_cancelar))
+                .setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        
+                    }
+                });
         return vista;
     }
 }
