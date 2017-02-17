@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -31,6 +32,11 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        Fragment fragmentoPrincipal = new FragmentoPrincipal();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content_main, fragmentoPrincipal)
+                .commit();
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -40,19 +46,20 @@ public class MainActivity extends AppCompatActivity
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
 
                         boolean fragmentTransaction = false;
-                        Fragment fragment = null;
+                        Fragment fragmentoLogin = null;
 
                         switch (menuItem.getItemId()) {
                             case R.id.login:
-                                fragment = new FragmentoLogin();
+                                fragmentoLogin = new FragmentoLogin();
                                 fragmentTransaction = true;
                                 break;
                         }
 
                         if(fragmentTransaction) {
                             getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.content_main, fragment)
+                                    .replace(R.id.content_main, fragmentoLogin)
                                     .commit();
+
 
                             menuItem.setChecked(true);
                             getSupportActionBar().setTitle(menuItem.getTitle());
@@ -63,6 +70,7 @@ public class MainActivity extends AppCompatActivity
                         return true;
                     }
                 });
+
     }
 
     @Override
@@ -121,17 +129,34 @@ public class MainActivity extends AppCompatActivity
 
     public void ponerFragBusqueda() {
         boolean fragmentTransaction = false;
-        Fragment fragment = null;
+        Fragment fragmentoBusqueda = null;
 
-        fragment = new FragmentoBuscar();
+        fragmentoBusqueda = new FragmentoBuscar();
         fragmentTransaction = true;
 
         if(fragmentTransaction) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_main, fragment)
+                    .replace(R.id.content_main, fragmentoBusqueda)
                     .commit();
 
             getSupportActionBar().setTitle("Buscar");
         }
     }
+
+    public void ponerFragPrincipal() {
+        boolean fragmentTransaction = false;
+        Fragment fragmentoPrincipal = null;
+
+        fragmentoPrincipal = new FragmentoPrincipal();
+        fragmentTransaction = true;
+
+        if(fragmentTransaction) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_main, fragmentoPrincipal)
+                    .commit();
+
+            getSupportActionBar().setTitle("VibBayZA");
+        }
+    }
+
 }

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "463605552853",
+    "firebase_url": "https://vibbayza.firebaseio.com",
+    "project_id": "vibbayza",
+    "storage_bucket": "vibbayza.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:463605552853:android:b7e4e8cb8ff39dc4",
+        "android_client_info": {
+          "package_name": "com.example.zigorlopezsanpelayo.vibbayza"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "463605552853-dr4mufb8mgh4b7d0j8o3qtleitmppfj5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNu6_P6Av4-iKbLEiCkc79wFzuwhYjwME"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
