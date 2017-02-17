@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 public class FragmentoBuscar extends Fragment {
 
@@ -17,5 +19,7 @@ public class FragmentoBuscar extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragmento_buscar, container, false);
+
     }
+
 }

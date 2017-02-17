@@ -16,6 +16,17 @@ public class FragmentoLogin extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragmento_login, container, false);
+        View vista =  inflater.inflate(R.layout.fragmento_login, container, false);
+
+        ((Button) vista.findViewById(R.id.aceptar))
+                .setOnClickListener(new OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        pulsadoBoton(v);
+                    }
+                });
+
+        return vista;
     }
 }
