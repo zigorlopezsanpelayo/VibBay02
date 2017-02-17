@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/login"
+            android:icon="@drawable/login"
+            android:title="Login" />
+        <item
+            android:id="@+id/casoUso2"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="CasoUso2" />
+        <item
+            android:id="@+id/casoUso3"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="CasoUso3" />
+        <item
+            android:id="@+id/casoUso4"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="CasoUso4" />
+    </group>
+
+</menu>
