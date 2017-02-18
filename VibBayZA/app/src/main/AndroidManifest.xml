@@ -29,12 +29,22 @@
             android:parentActivityName=".MainActivity">
             <intent-filter>
                 <action android:name="package.name.LOGINACTIVITY" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.zigorlopezsanpelayo.vibbayza.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ProfileActivity"
+            android:label="NombreUsuario"
+            android:parentActivityName=".LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.zigorlopezsanpelayo.vibbayza.LoginActivity" />
         </activity>
     </application>
 
