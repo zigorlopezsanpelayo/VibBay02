@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.content.Intent;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -41,25 +42,16 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
 
-                        boolean fragmentTransaction = false;
-                        Fragment fragmentoLogin = null;
+
 
                         switch (menuItem.getItemId()) {
                             case R.id.login:
-                                fragmentoLogin = new FragmentoLogin();
-                                fragmentTransaction = true;
+                                Intent login = new Intent(getApplicationContext(), LoginActivity.class);
+                                startActivity(login);
                                 break;
                         }
 
-                        if(fragmentTransaction) {
-                            getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.content_main, fragmentoLogin)
-                                    .commit();
 
-
-                            menuItem.setChecked(true);
-                            getSupportActionBar().setTitle(menuItem.getTitle());
-                        }
 
                         drawer.closeDrawers();
 
@@ -108,7 +100,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.login) {
-            // Handle the camera action
+
         } else if (id == R.id.casoUso2) {
 
         } else if (id == R.id.casoUso3) {
