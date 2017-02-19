@@ -130,20 +130,4 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void ponerFragPrincipal() {
-        boolean fragmentTransaction = false;
-        Fragment fragmentoPrincipal = null;
-
-        fragmentoPrincipal = new FragmentoPrincipal();
-        fragmentTransaction = true;
-
-        if(fragmentTransaction) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_main, fragmentoPrincipal)
-                    .commit();
-
-            getSupportActionBar().setTitle("VibBayZA");
-        }
-    }
-
 }

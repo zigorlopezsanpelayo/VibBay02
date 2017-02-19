@@ -36,6 +36,8 @@ public class ProfileActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_main, fragmentoPrincipal)
                 .commit();
+        getSupportActionBar().setTitle(getIntent().getExtras().getString("nombreUsuario"));
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_profile);
         navigationView.setNavigationItemSelectedListener(this);

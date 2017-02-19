@@ -20,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,8 +30,10 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.server.converter.StringToIntConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +57,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
     };
+    private static final String[] listaEmail = new  String[] {
+            "z", "a"
+    };
+    private static final String[] listaPass = new String[] {
+            "z", "a"
+    };
+    private static String nombreUsuario;
+    private static int indice;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -162,18 +173,44 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        Intent login = new Intent(getApplicationContext(), ProfileActivity.class);
-        startActivity(login);
+        EditText contenidoEmail = (EditText) findViewById(R.id.email);
+        EditText contenidoPass = (EditText) findViewById(R.id.password);
+        String contenidoEmailS = contenidoEmail.getText().toString();
+        String contenidoPassS = contenidoPass.getText().toString();
+        if (isEmailValid(contenidoEmailS) && isPasswordValid(contenidoPassS)) {
+            Intent perfil = new Intent(getApplicationContext(), ProfileActivity.class);
+            perfil.putExtra("nombreUsuario", nombreUsuario);
+            startActivity(perfil);
+        }
+        else {
+            Toast validacionUsuario = Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrecto", Toast.LENGTH_SHORT);
+            validacionUsuario.show();
+            ((EditText) findViewById(R.id.email)).setText(null);
+            ((EditText) findViewById(R.id.password)).setText(null);
+        }
     }
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return email.contains("@");
+        boolean emailValido = false;
+        for (int i = 0;i < listaEmail.length;i++) {
+            if (email.equals(listaEmail[i].toString())) {
+                nombreUsuario = listaEmail[i].toString();
+                emailValido = true;
+                indice = i;
+                break;
+            }
+        }
+        return emailValido;
     }
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        boolean passValida = false;
+        if (password.equals(listaPass[indice].toString())) {
+            passValida = true;
+        }
+        return passValida;
     }
 
     /**
