@@ -45,12 +45,26 @@ public class ProfileActivity extends AppCompatActivity
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
 
-
-
                         switch (menuItem.getItemId()) {
                             case R.id.logout:
                                 Intent main = new Intent(getApplicationContext(), MainActivity.class);
                                 startActivity(main);
+                                break;
+                            case R.id.articulos:
+                                Fragment fragmentoArticulos = new FragmentoArticulos();
+                                getSupportFragmentManager().beginTransaction()
+                                        .replace(R.id.content_main, fragmentoArticulos)
+                                        .commit();
+
+                                getSupportActionBar().setTitle("Artícluos");
+                                break;
+                            case R.id.pujas:
+                                Fragment fragmentoPujas = new FragmentoPujas();
+                                getSupportFragmentManager().beginTransaction()
+                                        .replace(R.id.content_main, fragmentoPujas)
+                                        .commit();
+
+                                getSupportActionBar().setTitle("Pujas");
                                 break;
                         }
 
