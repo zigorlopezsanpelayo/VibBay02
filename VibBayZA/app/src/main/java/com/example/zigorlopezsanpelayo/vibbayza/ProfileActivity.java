@@ -1,25 +1,28 @@
 package com.example.zigorlopezsanpelayo.vibbayza;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.content.Intent;
+import android.view.View;
 
-public class MainActivity extends AppCompatActivity
+public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -33,8 +36,10 @@ public class MainActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_main, fragmentoPrincipal)
                 .commit();
+        getSupportActionBar().setTitle(getIntent().getExtras().getString("nombreUsuario"));
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_profile);
         navigationView.setNavigationItemSelectedListener(this);
 
         navigationView.setNavigationItemSelectedListener(
@@ -42,12 +47,26 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
 
-
-
                         switch (menuItem.getItemId()) {
-                            case R.id.login:
-                                Intent login = new Intent(getApplicationContext(), LoginActivity.class);
-                                startActivity(login);
+                            case R.id.logout:
+                                Intent main = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(main);
+                                break;
+                            case R.id.articulos:
+                                Fragment fragmentoArticulos = new FragmentoArticulos();
+                                getSupportFragmentManager().beginTransaction()
+                                        .replace(R.id.content_main, fragmentoArticulos)
+                                        .commit();
+
+                                getSupportActionBar().setTitle("Artícluos");
+                                break;
+                            case R.id.pujas:
+                                Fragment fragmentoPujas = new FragmentoPujas();
+                                getSupportFragmentManager().beginTransaction()
+                                        .replace(R.id.content_main, fragmentoPujas)
+                                        .commit();
+
+                                getSupportActionBar().setTitle("Pujas");
                                 break;
                         }
 
@@ -99,7 +118,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.login) {
+        if (id == R.id.logout) {
 
         } else if (id == R.id.casoUso2) {
 
