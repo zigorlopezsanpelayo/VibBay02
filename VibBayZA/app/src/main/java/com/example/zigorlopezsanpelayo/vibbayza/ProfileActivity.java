@@ -10,10 +10,14 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+
+import java.security.acl.Group;
 
 public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -120,7 +124,7 @@ public class ProfileActivity extends AppCompatActivity
 
         if (id == R.id.logout) {
 
-        } else if (id == R.id.casoUso2) {
+        } else if (id == R.id.articulos) {
 
         } else if (id == R.id.casoUso3) {
 
