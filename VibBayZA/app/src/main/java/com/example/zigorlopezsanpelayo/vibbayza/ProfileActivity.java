@@ -106,6 +106,9 @@ public class ProfileActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
+            case R.id.aniadirArticulo:
+                ponerFragAniadirArticulo();
+                return true;
             case R.id.buscar:
                 ponerFragBusqueda();
                 return true;
@@ -150,6 +153,22 @@ public class ProfileActivity extends AppCompatActivity
                     .commit();
 
             getSupportActionBar().setTitle("Buscar");
+        }
+    }
+
+    public void ponerFragAniadirArticulo() {
+        boolean fragmentTransaction = false;
+        Fragment fragmentoAniadirArticulo = null;
+
+        fragmentoAniadirArticulo = new FragmentoAniadirArticulo();
+        fragmentTransaction = true;
+
+        if(fragmentTransaction) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_main, fragmentoAniadirArticulo)
+                    .commit();
+
+            getSupportActionBar().setTitle("Añadir artículo");
         }
     }
 
