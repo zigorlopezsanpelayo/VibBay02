@@ -14,10 +14,6 @@
             android:id="@+id/pujas"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Mis pujas" />
-        <item
-            android:id="@+id/casoUso4"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="CasoUso4" />
     </group>
 
 </menu>
