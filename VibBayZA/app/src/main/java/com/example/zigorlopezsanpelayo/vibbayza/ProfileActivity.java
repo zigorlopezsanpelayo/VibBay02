@@ -112,8 +112,6 @@ public class ProfileActivity extends AppCompatActivity
             case R.id.buscar:
                 ponerFragBusqueda();
                 return true;
-            case R.id.ajustes:
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -130,8 +128,6 @@ public class ProfileActivity extends AppCompatActivity
         } else if (id == R.id.articulos) {
 
         } else if (id == R.id.casoUso3) {
-
-        } else if (id == R.id.casoUso4) {
 
         }
 

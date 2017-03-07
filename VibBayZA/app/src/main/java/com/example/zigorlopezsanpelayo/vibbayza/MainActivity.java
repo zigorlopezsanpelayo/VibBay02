@@ -1,5 +1,6 @@
 package com.example.zigorlopezsanpelayo.vibbayza;
 
+import android.app.DownloadManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -48,9 +49,7 @@ public class MainActivity extends AppCompatActivity
 
                         switch (menuItem.getItemId()) {
                             case R.id.login:
-                                Intent login = new Intent(getApplicationContext(), LoginActivity.class);
-                                startActivity(login);
-                                break;
+                                ponerFragLogin();
                         }
 
 
@@ -88,8 +87,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.buscar:
                 ponerFragBusqueda();
                 return true;
-            case R.id.ajustes:
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -106,8 +103,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.casoUso2) {
 
         } else if (id == R.id.casoUso3) {
-
-        } else if (id == R.id.casoUso4) {
 
         }
 
@@ -129,6 +124,22 @@ public class MainActivity extends AppCompatActivity
                     .commit();
 
             getSupportActionBar().setTitle("Buscar");
+        }
+    }
+
+    public void ponerFragLogin() {
+        boolean fragmentTransaction = false;
+        Fragment fragmentoLogin = null;
+
+        fragmentoLogin = new FragmentoLogin();
+        fragmentTransaction = true;
+
+        if(fragmentTransaction) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_main, fragmentoLogin)
+                    .commit();
+
+            getSupportActionBar().setTitle("Login");
         }
     }
 
