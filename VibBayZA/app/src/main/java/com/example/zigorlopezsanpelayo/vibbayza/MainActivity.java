@@ -38,6 +38,11 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    EditText emailForm;
+    EditText passForm;
+    String emailFormS;
+    String passFormS;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -167,18 +172,15 @@ public class MainActivity extends AppCompatActivity
 
     private class ObtenerDatos extends AsyncTask<String,Integer,Boolean> {
 
-        private EditText emailForm;
-        private EditText passForm;
         private String[] usuarios;
 
         protected Boolean doInBackground(String... params) {
-
             boolean resul = true;
 
             HttpClient httpClient = new DefaultHttpClient();
 
             HttpGet del =
-                    new HttpGet("http://10.107.57.21:51674/Api/Clientes");
+                    new HttpGet("http://192.168.0.16:8084/jsonweb/rest/usuarios");
 
             del.setHeader("content-type", "application/json");
 
@@ -198,7 +200,8 @@ public class MainActivity extends AppCompatActivity
                     String emailRest = obj.getString("email");
                     String passRest = obj.getString("pass");
 
-                    if (emailRest.equals(emailForm) && passRest.equals(passForm)) {
+                    if (emailRest.equals(emailFormS) && passRest.equals(passFormS)) {
+                        Log.i("string", "valido");
                         Intent perfil = new Intent(getApplicationContext(), ProfileActivity.class);
                         perfil.putExtra("nombreUsuario", emailRest);
                         startActivity(perfil);
@@ -206,6 +209,7 @@ public class MainActivity extends AppCompatActivity
                         validacionUsuarioCorrecta.show();
                     }
                     else {
+                        Log.i("string", "no valido");
                         Toast validacionUsuarioIncorrecta = Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrecto", Toast.LENGTH_SHORT);
                         validacionUsuarioIncorrecta.show();
                     }
@@ -219,10 +223,16 @@ public class MainActivity extends AppCompatActivity
 
             return resul;
         }
+
     }
 
     public void validar(View v) {
-        Log.i("string2", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+        emailForm = (EditText) findViewById(R.id.email);
+        passForm = (EditText) findViewById(R.id.password);
+        emailFormS = emailForm.getText().toString();
+        passFormS = passForm.getText().toString();
+
         ObtenerDatos datos = new ObtenerDatos();
         datos.execute();
     }
