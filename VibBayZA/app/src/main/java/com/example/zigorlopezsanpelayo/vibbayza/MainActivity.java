@@ -3,6 +3,8 @@ package com.example.zigorlopezsanpelayo.vibbayza;
 import android.app.DownloadManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -176,14 +178,13 @@ public class MainActivity extends AppCompatActivity
 
         protected Boolean doInBackground(String... params) {
             boolean resul = true;
-
+            boolean logeado = false;
             HttpClient httpClient = new DefaultHttpClient();
 
             HttpGet del =
-                    new HttpGet("http://192.168.0.16:8084/jsonweb/rest/usuarios");
+                    new HttpGet("http://10.111.17.185:8084/jsonweb/rest/usuarios");
 
             del.setHeader("content-type", "application/json");
-
             try
             {
                 HttpResponse resp = httpClient.execute(del);
@@ -201,18 +202,33 @@ public class MainActivity extends AppCompatActivity
                     String passRest = obj.getString("pass");
 
                     if (emailRest.equals(emailFormS) && passRest.equals(passFormS)) {
-                        Log.i("string", "valido");
+                        Log.i("string","valido");
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast validacionUsuarioCorrecta = Toast.makeText(getApplicationContext(), "Logeado con éxito", Toast.LENGTH_SHORT);
+                                validacionUsuarioCorrecta.show();
+                            }
+                        });
                         Intent perfil = new Intent(getApplicationContext(), ProfileActivity.class);
                         perfil.putExtra("nombreUsuario", emailRest);
                         startActivity(perfil);
-                        Toast validacionUsuarioCorrecta = Toast.makeText(getApplicationContext(), "Logeado con éxito", Toast.LENGTH_SHORT);
-                        validacionUsuarioCorrecta.show();
+                        logeado = true;
                     }
-                    else {
-                        Log.i("string", "no valido");
-                        Toast validacionUsuarioIncorrecta = Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrecto", Toast.LENGTH_SHORT);
-                        validacionUsuarioIncorrecta.show();
-                    }
+                }
+                if (!logeado) {
+                    Log.i("string","no valido");
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast validacionUsuarioIncorrecta = Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrecto", Toast.LENGTH_SHORT);
+                            validacionUsuarioIncorrecta.show();
+                            emailForm.setText("");
+                            passForm.setText("");
+                        }
+                    });
                 }
             }
             catch(Exception ex)
