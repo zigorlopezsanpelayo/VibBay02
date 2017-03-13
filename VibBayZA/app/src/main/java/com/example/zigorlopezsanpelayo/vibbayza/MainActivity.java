@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity
             HttpClient httpClient = new DefaultHttpClient();
 
             HttpGet del =
-                    new HttpGet("http://10.111.17.185:8084/jsonweb/rest/usuarios");
+                    new HttpGet("http://192.168.0.16:8084/jsonweb/rest/usuarios");
 
             del.setHeader("content-type", "application/json");
             try
@@ -202,7 +202,6 @@ public class MainActivity extends AppCompatActivity
                     String passRest = obj.getString("pass");
 
                     if (emailRest.equals(emailFormS) && passRest.equals(passFormS)) {
-                        Log.i("string","valido");
                         Handler handler = new Handler(Looper.getMainLooper());
                         handler.post(new Runnable() {
                             @Override
@@ -218,7 +217,6 @@ public class MainActivity extends AppCompatActivity
                     }
                 }
                 if (!logeado) {
-                    Log.i("string","no valido");
                     Handler handler = new Handler(Looper.getMainLooper());
                     handler.post(new Runnable() {
                         @Override

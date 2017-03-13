@@ -1,7 +1,12 @@
 package com.example.zigorlopezsanpelayo.vibbayza;
 
+import android.content.ClipData;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -12,15 +17,34 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.security.acl.Group;
 
+import static com.example.zigorlopezsanpelayo.vibbayza.R.id.email;
+import static com.example.zigorlopezsanpelayo.vibbayza.R.id.fragmento_articulos;
+
 public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    TextView articulo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +85,8 @@ public class ProfileActivity extends AppCompatActivity
                                 getSupportFragmentManager().beginTransaction()
                                         .replace(R.id.content_main, fragmentoArticulos)
                                         .commit();
-
+                                ObtenerArticulos articulos = new ObtenerArticulos();
+                                articulos.execute();
                                 getSupportActionBar().setTitle("Artícluos");
                                 break;
                             case R.id.pujas:
@@ -166,6 +191,66 @@ public class ProfileActivity extends AppCompatActivity
 
             getSupportActionBar().setTitle("Añadir artículo");
         }
+    }
+
+    private class ObtenerArticulos extends AsyncTask<String,Integer,Boolean> {
+
+        private String[] articulos;
+
+        protected Boolean doInBackground(String... params) {
+            boolean resul = true;
+            HttpClient httpClient = new DefaultHttpClient();
+
+            HttpGet del =
+                    new HttpGet("http://192.168.0.16:8084/jsonweb/rest/articulos");
+
+            del.setHeader("content-type", "application/json");
+            try
+            {
+                HttpResponse resp = httpClient.execute(del);
+                String respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONArray respJSON = new JSONArray(respStr);
+
+                articulos = new String[respJSON.length()];
+
+                for(int i=0; i<respJSON.length(); i++) {
+
+                    JSONObject obj = respJSON.getJSONObject(i);
+
+                    final String nombreArt = obj.getString("titulo");
+                    final String precio = obj.getString("precio");
+                    String emailRest = obj.getString("email");
+
+                    Log.i("string", nombreArt);
+                    Log.i("string", emailRest);
+
+                    if (emailRest.equals("{\"email\":\"z\",\"pass\":\"z\"}")) {
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                articulo = new TextView(ProfileActivity.this);
+                                articulo.setText(nombreArt + "  " + precio + "€");
+                                articulo.setTextSize(35);
+                                articulo.setTextColor(Color.RED);
+                                LinearLayout arts = (LinearLayout) findViewById(R.id.fragmento_articulos);
+                                arts.addView(articulo);
+                            }
+                        });
+                    }
+                }
+
+            }
+            catch(Exception ex)
+            {
+                Log.e("ServicioRest","Error!", ex);
+                resul = false;
+            }
+
+            return resul;
+        }
+
     }
 
 }
