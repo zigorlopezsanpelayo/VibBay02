@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity
             HttpClient httpClient = new DefaultHttpClient();
 
             HttpGet obtenerUsuarios =
-                    new HttpGet("http://10.111.17.185:8084/jsonweb/rest/usuarios");
+                    new HttpGet("http://192.168.0.16:8084/jsonweb/rest/usuarios");
 
             obtenerUsuarios.setHeader("content-type", "application/json");
             try
@@ -263,10 +263,11 @@ public class MainActivity extends AppCompatActivity
 
         protected Boolean doInBackground(String... params) {
             boolean resultado = true;
+            boolean encontrado = false;
             HttpClient httpClient = new DefaultHttpClient();
 
             HttpGet obtenerArticulos =
-                    new HttpGet("http://10.111.17.185:8084/jsonweb/rest/articulos");
+                    new HttpGet("http://192.168.0.16:8084/jsonweb/rest/articulos");
 
             obtenerArticulos.setHeader("content-type", "application/json");
             try
@@ -292,6 +293,7 @@ public class MainActivity extends AppCompatActivity
                             Log.i("String", "ENCONTRADO");
                             final String nombreArt = obj.getString("titulo");
                             final String precio = obj.getString("precio");
+                            encontrado = true;
                             Handler handler = new Handler(Looper.getMainLooper());
                             handler.post(new Runnable() {
                                 @Override
@@ -306,6 +308,16 @@ public class MainActivity extends AppCompatActivity
                             });
                         }
                     }
+                }
+                if (!encontrado) {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast articuloNoEncontrado = Toast.makeText(getApplicationContext(), "No hay coincidencias", Toast.LENGTH_SHORT);
+                            articuloNoEncontrado.show();
+                        }
+                    });
                 }
             }
             catch(Exception ex)
