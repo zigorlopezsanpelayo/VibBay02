@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,6 +32,8 @@ import android.widget.Toast;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
@@ -45,6 +48,8 @@ public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     TextView articulo;
+    EditText nombreForm;
+    String nombreFormS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,16 +203,18 @@ public class ProfileActivity extends AppCompatActivity
         private String[] articulos;
 
         protected Boolean doInBackground(String... params) {
-            boolean resul = true;
+            boolean resultado = true;
+            String emailUsuario = getIntent().getExtras().getString("emailUsuario");
+
             HttpClient httpClient = new DefaultHttpClient();
 
-            HttpGet del =
-                    new HttpGet("http://192.168.0.16:8084/jsonweb/rest/articulos");
+            HttpGet obtenerArticulosusuario =
+                    new HttpGet("http://192.168.0.16:8084/jsonweb/rest/articulos/Articulos/" + emailUsuario);
 
-            del.setHeader("content-type", "application/json");
+            obtenerArticulosusuario.setHeader("content-type", "application/json");
             try
             {
-                HttpResponse resp = httpClient.execute(del);
+                HttpResponse resp = httpClient.execute(obtenerArticulosusuario);
                 String respStr = EntityUtils.toString(resp.getEntity());
 
                 JSONArray respJSON = new JSONArray(respStr);
@@ -220,37 +227,93 @@ public class ProfileActivity extends AppCompatActivity
 
                     final String nombreArt = obj.getString("titulo");
                     final String precio = obj.getString("precio");
-                    String emailRest = obj.getString("email");
 
-                    Log.i("string", nombreArt);
-                    Log.i("string", emailRest);
-
-                    if (emailRest.equals("{\"email\":\"z\",\"pass\":\"z\"}")) {
-                        Handler handler = new Handler(Looper.getMainLooper());
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                articulo = new TextView(ProfileActivity.this);
-                                articulo.setText(nombreArt + "  " + precio + "€");
-                                articulo.setTextSize(35);
-                                articulo.setTextColor(Color.RED);
-                                LinearLayout arts = (LinearLayout) findViewById(R.id.fragmento_articulos);
-                                arts.addView(articulo);
-                            }
-                        });
-                    }
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            articulo = new TextView(ProfileActivity.this);
+                            articulo.setText(nombreArt + "  " + precio + "€");
+                            articulo.setTextSize(35);
+                            articulo.setTextColor(Color.RED);
+                            LinearLayout arts = (LinearLayout) findViewById(R.id.fragmento_articulos);
+                            arts.addView(articulo);
+                        }
+                    });
                 }
 
             }
             catch(Exception ex)
             {
                 Log.e("ServicioRest","Error!", ex);
-                resul = false;
+                resultado = false;
             }
 
-            return resul;
+            return resultado;
         }
 
     }
 
+    private class InsertarArticulo extends AsyncTask<String,Integer,Boolean> {
+
+        protected Boolean doInBackground(String... params) {
+
+            boolean resultado = true;
+            String emailUsuario = getIntent().getExtras().getString("emailUsuario");
+
+            HttpClient httpClient = new DefaultHttpClient();
+
+            HttpPost subirArticulo = new HttpPost("http://192.168.0.16:8084/jsonweb/rest/articulos");
+            subirArticulo.setHeader("content-type", "application/json");
+
+            try
+            {
+                JSONObject articulo = new JSONObject();
+
+                articulo.put("titulo", nombreFormS);
+                articulo.put("nombreImagen", "kkkkkkkkkkk");
+                articulo.put("email", emailUsuario);
+                articulo.put("estado", "false");
+                articulo.put("precio", "140000.99");
+                StringEntity entity = new StringEntity(articulo.toString());
+                subirArticulo.setEntity(entity);
+
+                HttpResponse resp = httpClient.execute(subirArticulo);
+                String respStr = EntityUtils.toString(resp.getEntity());
+
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        nombreForm.setText("");
+                        Toast articuloSubido = Toast.makeText(getApplicationContext(), "Artículo publicado", Toast.LENGTH_SHORT);
+                        articuloSubido.show();
+                    }
+                });
+
+                Log.i("string", articulo.toString());
+
+                if(!respStr.equals("true"))
+                    resultado = false;
+                Log.i("string", "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+
+            }
+            catch(Exception ex)
+            {
+                Log.e("ServicioRest","Error!", ex);
+                resultado = false;
+            }
+
+            return resultado;
+        }
+    }
+
+    public void aniadirArticulo(View v) {
+
+        nombreForm = (EditText) findViewById(R.id.campo_nombre_articulo);
+        nombreFormS = nombreForm.getText().toString();
+
+        InsertarArticulo insertar = new InsertarArticulo();
+        insertar.execute();
+    }
 }

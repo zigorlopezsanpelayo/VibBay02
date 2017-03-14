@@ -177,17 +177,17 @@ public class MainActivity extends AppCompatActivity
         private String[] usuarios;
 
         protected Boolean doInBackground(String... params) {
-            boolean resul = true;
+            boolean resultado = true;
             boolean logeado = false;
             HttpClient httpClient = new DefaultHttpClient();
 
-            HttpGet del =
+            HttpGet obtenerUsuarios =
                     new HttpGet("http://192.168.0.16:8084/jsonweb/rest/usuarios");
 
-            del.setHeader("content-type", "application/json");
+            obtenerUsuarios.setHeader("content-type", "application/json");
             try
             {
-                HttpResponse resp = httpClient.execute(del);
+                HttpResponse resp = httpClient.execute(obtenerUsuarios);
                 String respStr = EntityUtils.toString(resp.getEntity());
 
                 JSONArray respJSON = new JSONArray(respStr);
@@ -197,7 +197,6 @@ public class MainActivity extends AppCompatActivity
                 for(int i=0; i<respJSON.length(); i++)
                 {
                     JSONObject obj = respJSON.getJSONObject(i);
-
                     String emailRest = obj.getString("email");
                     String passRest = obj.getString("pass");
 
@@ -211,7 +210,7 @@ public class MainActivity extends AppCompatActivity
                             }
                         });
                         Intent perfil = new Intent(getApplicationContext(), ProfileActivity.class);
-                        perfil.putExtra("nombreUsuario", emailRest);
+                        perfil.putExtra("emailUsuario", emailRest);
                         startActivity(perfil);
                         logeado = true;
                     }
@@ -232,10 +231,10 @@ public class MainActivity extends AppCompatActivity
             catch(Exception ex)
             {
                 Log.e("ServicioRest","Error!", ex);
-                resul = false;
+                resultado = false;
             }
 
-            return resul;
+            return resultado;
         }
 
     }
