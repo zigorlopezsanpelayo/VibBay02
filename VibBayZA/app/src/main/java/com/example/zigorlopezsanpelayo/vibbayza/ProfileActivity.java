@@ -209,7 +209,7 @@ public class ProfileActivity extends AppCompatActivity
             HttpClient httpClient = new DefaultHttpClient();
 
             HttpGet obtenerArticulosusuario =
-                    new HttpGet("http://10.111.17.185:8084/jsonweb/rest/articulos/Articulos/" + emailUsuario);
+                    new HttpGet("http://192.168.0.16:8084/jsonweb/rest/articulos/Articulos/" + emailUsuario);
 
             obtenerArticulosusuario.setHeader("content-type", "application/json");
             try
@@ -263,7 +263,7 @@ public class ProfileActivity extends AppCompatActivity
 
             HttpClient httpClient = new DefaultHttpClient();
 
-            HttpPost subirArticulo = new HttpPost("http://10.111.17.185:8084/jsonweb/rest/articulos");
+            HttpPost subirArticulo = new HttpPost("http://192.168.0.16:8084/jsonweb/rest/articulos");
             subirArticulo.setHeader("content-type", "application/json");
 
             try
@@ -295,7 +295,6 @@ public class ProfileActivity extends AppCompatActivity
 
                 if(!respStr.equals("true"))
                     resultado = false;
-                Log.i("string", "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 
             }
             catch(Exception ex)
