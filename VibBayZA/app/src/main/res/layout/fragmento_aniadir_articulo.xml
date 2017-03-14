@@ -42,6 +42,7 @@
             android:layout_weight="1"
             android:backgroundTint="@color/colorAccent"
             android:text="Añadir"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:onClick="aniadirArticulo"/>
     </LinearLayout>
 </RelativeLayout>
