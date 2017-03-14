@@ -200,7 +200,7 @@ public class ProfileActivity extends AppCompatActivity
 
     private class ObtenerArticulos extends AsyncTask<String,Integer,Boolean> {
 
-        private String[] articulos;
+        private String[] articulosUsuario;
 
         protected Boolean doInBackground(String... params) {
             boolean resultado = true;
@@ -209,7 +209,7 @@ public class ProfileActivity extends AppCompatActivity
             HttpClient httpClient = new DefaultHttpClient();
 
             HttpGet obtenerArticulosusuario =
-                    new HttpGet("http://192.168.0.16:8084/jsonweb/rest/articulos/Articulos/" + emailUsuario);
+                    new HttpGet("http://10.111.17.185:8084/jsonweb/rest/articulos/Articulos/" + emailUsuario);
 
             obtenerArticulosusuario.setHeader("content-type", "application/json");
             try
@@ -219,7 +219,7 @@ public class ProfileActivity extends AppCompatActivity
 
                 JSONArray respJSON = new JSONArray(respStr);
 
-                articulos = new String[respJSON.length()];
+                articulosUsuario = new String[respJSON.length()];
 
                 for(int i=0; i<respJSON.length(); i++) {
 
@@ -263,7 +263,7 @@ public class ProfileActivity extends AppCompatActivity
 
             HttpClient httpClient = new DefaultHttpClient();
 
-            HttpPost subirArticulo = new HttpPost("http://192.168.0.16:8084/jsonweb/rest/articulos");
+            HttpPost subirArticulo = new HttpPost("http://10.111.17.185:8084/jsonweb/rest/articulos");
             subirArticulo.setHeader("content-type", "application/json");
 
             try
