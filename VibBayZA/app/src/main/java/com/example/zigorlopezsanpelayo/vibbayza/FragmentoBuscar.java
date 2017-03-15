@@ -34,6 +34,7 @@ public class FragmentoBuscar extends Fragment {
     protected String buscarFormS;
     protected boolean encontrado;
     protected TextView articuloEncontrado;
+    protected LinearLayout arts;
 
     public FragmentoBuscar() {
         // Required empty public constructor
@@ -55,6 +56,8 @@ public class FragmentoBuscar extends Fragment {
         botonBuscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                arts = (LinearLayout) getView().findViewById(R.id.encontrados);
+                arts.removeAllViews();
                 buscarFormS = buscarForm.getText().toString().toLowerCase();
                 Call<List<Articulos>> call = servicio.findAll();
                 call.enqueue(new Callback<List<Articulos>>() {
@@ -75,7 +78,6 @@ public class FragmentoBuscar extends Fragment {
                                     articuloEncontrado.setText(nombreArt + "  " + precio + "€");
                                     articuloEncontrado.setTextSize(35);
                                     articuloEncontrado.setTextColor(Color.RED);
-                                    LinearLayout arts = (LinearLayout) getView().findViewById(R.id.busqueda);
                                     arts.addView(articuloEncontrado);
                                 }
                             }

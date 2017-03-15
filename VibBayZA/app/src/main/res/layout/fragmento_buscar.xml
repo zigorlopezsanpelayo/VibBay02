@@ -61,5 +61,14 @@
             android:text="Buscar"
             android:textColor="@android:color/white" />
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/encontrados"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+    </LinearLayout>
     
 </LinearLayout>
