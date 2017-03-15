@@ -69,7 +69,7 @@ public class ProfileActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_main, fragmentoPrincipal)
                 .commit();
-        getSupportActionBar().setTitle(getIntent().getExtras().getString("nombreUsuario"));
+        getSupportActionBar().setTitle(getIntent().getExtras().getString("emailUsuario"));
 
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_profile);
@@ -90,8 +90,6 @@ public class ProfileActivity extends AppCompatActivity
                                 getSupportFragmentManager().beginTransaction()
                                         .replace(R.id.content_main, fragmentoArticulos)
                                         .commit();
-                                ObtenerArticulos articulos = new ObtenerArticulos();
-                                articulos.execute();
                                 getSupportActionBar().setTitle("Artícluos");
                                 break;
                             case R.id.pujas:
@@ -198,61 +196,6 @@ public class ProfileActivity extends AppCompatActivity
         }
     }
 
-    private class ObtenerArticulos extends AsyncTask<String,Integer,Boolean> {
-
-        private String[] articulosUsuario;
-
-        protected Boolean doInBackground(String... params) {
-            boolean resultado = true;
-            String emailUsuario = getIntent().getExtras().getString("emailUsuario");
-
-            HttpClient httpClient = new DefaultHttpClient();
-
-            HttpGet obtenerArticulosusuario =
-                    new HttpGet("http://192.168.0.16:8084/jsonweb/rest/articulos/Articulos/" + emailUsuario);
-
-            obtenerArticulosusuario.setHeader("content-type", "application/json");
-            try
-            {
-                HttpResponse resp = httpClient.execute(obtenerArticulosusuario);
-                String respStr = EntityUtils.toString(resp.getEntity());
-
-                JSONArray respJSON = new JSONArray(respStr);
-
-                articulosUsuario = new String[respJSON.length()];
-
-                for(int i=0; i<respJSON.length(); i++) {
-
-                    JSONObject obj = respJSON.getJSONObject(i);
-
-                    final String nombreArt = obj.getString("titulo");
-                    final String precio = obj.getString("precio");
-
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            articulo = new TextView(ProfileActivity.this);
-                            articulo.setText(nombreArt + "  " + precio + "€");
-                            articulo.setTextSize(35);
-                            articulo.setTextColor(Color.RED);
-                            LinearLayout arts = (LinearLayout) findViewById(R.id.fragmento_articulos);
-                            arts.addView(articulo);
-                        }
-                    });
-                }
-
-            }
-            catch(Exception ex)
-            {
-                Log.e("ServicioRest","Error!", ex);
-                resultado = false;
-            }
-
-            return resultado;
-        }
-
-    }
 
     private class InsertarArticulo extends AsyncTask<String,Integer,Boolean> {
 
