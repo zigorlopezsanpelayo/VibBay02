@@ -43,15 +43,6 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    EditText emailForm;
-    EditText passForm;
-    EditText buscarForm;
-    String emailFormS;
-    String passFormS;
-    String buscarFormS;
-    String buscarFormSLow;
-    TextView articulo;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -164,9 +155,8 @@ public class MainActivity extends AppCompatActivity
 
     public void ponerFragLogin() {
         boolean fragmentTransaction = false;
-        Fragment fragmentoLogin = null;
 
-        fragmentoLogin = new FragmentoLogin();
+        FragmentoLogin fragmentoLogin = new FragmentoLogin();
         fragmentTransaction = true;
 
         if(fragmentTransaction) {
@@ -176,168 +166,5 @@ public class MainActivity extends AppCompatActivity
 
             getSupportActionBar().setTitle("Login");
         }
-
-    }
-
-    private class ObtenerUsuarios extends AsyncTask<String,Integer,Boolean> {
-
-        private String[] usuarios;
-
-        protected Boolean doInBackground(String... params) {
-            boolean resultado = true;
-            boolean logeado = false;
-            HttpClient httpClient = new DefaultHttpClient();
-
-            HttpGet obtenerUsuarios =
-                    new HttpGet("http://192.168.0.16:8084/jsonweb/rest/usuarios");
-
-            obtenerUsuarios.setHeader("content-type", "application/json");
-            try
-            {
-                HttpResponse resp = httpClient.execute(obtenerUsuarios);
-                String respStr = EntityUtils.toString(resp.getEntity());
-
-                JSONArray respJSON = new JSONArray(respStr);
-
-                usuarios = new String[respJSON.length()];
-
-                for(int i=0; i<respJSON.length(); i++)
-                {
-                    JSONObject obj = respJSON.getJSONObject(i);
-                    String emailRest = obj.getString("email");
-                    String passRest = obj.getString("pass");
-
-                    if (emailRest.equals(emailFormS) && passRest.equals(passFormS)) {
-                        Handler handler = new Handler(Looper.getMainLooper());
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast validacionUsuarioCorrecta = Toast.makeText(getApplicationContext(), "Logeado con éxito", Toast.LENGTH_SHORT);
-                                validacionUsuarioCorrecta.show();
-                            }
-                        });
-                        Intent perfil = new Intent(getApplicationContext(), ProfileActivity.class);
-                        perfil.putExtra("emailUsuario", emailRest);
-                        startActivity(perfil);
-                        logeado = true;
-                    }
-                }
-                if (!logeado) {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast validacionUsuarioIncorrecta = Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrecto", Toast.LENGTH_SHORT);
-                            validacionUsuarioIncorrecta.show();
-                            emailForm.setText("");
-                            passForm.setText("");
-                        }
-                    });
-                }
-            }
-            catch(Exception ex)
-            {
-                Log.e("ServicioRest","Error!", ex);
-                resultado = false;
-            }
-
-            return resultado;
-        }
-
-    }
-
-    public void validar(View v) {
-
-        emailForm = (EditText) findViewById(R.id.email);
-        passForm = (EditText) findViewById(R.id.password);
-        emailFormS = emailForm.getText().toString();
-        passFormS = passForm.getText().toString();
-
-        ObtenerUsuarios datos = new ObtenerUsuarios();
-        datos.execute();
-    }
-
-    private class ObtenerArticulos extends AsyncTask<String,Integer,Boolean> {
-
-        private String[] articulos;
-
-        protected Boolean doInBackground(String... params) {
-            boolean resultado = true;
-            boolean encontrado = false;
-            HttpClient httpClient = new DefaultHttpClient();
-
-            HttpGet obtenerArticulos =
-                    new HttpGet("http://192.168.0.16:8084/jsonweb/rest/articulos");
-
-            obtenerArticulos.setHeader("content-type", "application/json");
-            try
-            {
-                HttpResponse resp = httpClient.execute(obtenerArticulos);
-                String respStr = EntityUtils.toString(resp.getEntity());
-
-                JSONArray respJSON = new JSONArray(respStr);
-
-                articulos = new String[respJSON.length()];
-
-                for(int i=0; i<respJSON.length(); i++)
-                {
-                    JSONObject obj = respJSON.getJSONObject(i);
-                    String titulo = obj.getString("titulo");
-                    String tituloLow = titulo.toLowerCase();
-                    char[] tituloChar = tituloLow.toCharArray();
-                    String tituloParcial = "";
-
-                    for (int j=0; j<tituloChar.length; j++) {
-                        tituloParcial = tituloParcial + tituloChar[j];
-                        if (buscarFormSLow.equals(tituloParcial)) {
-                            Log.i("String", "ENCONTRADO");
-                            final String nombreArt = obj.getString("titulo");
-                            final String precio = obj.getString("precio");
-                            encontrado = true;
-                            Handler handler = new Handler(Looper.getMainLooper());
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    articulo = new TextView(getApplicationContext());
-                                    articulo.setText(nombreArt + "  " + precio + "€");
-                                    articulo.setTextSize(35);
-                                    articulo.setTextColor(Color.RED);
-                                    LinearLayout arts = (LinearLayout) findViewById(R.id.busqueda);
-                                    arts.addView(articulo);
-                                }
-                            });
-                        }
-                    }
-                }
-                if (!encontrado) {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast articuloNoEncontrado = Toast.makeText(getApplicationContext(), "No hay coincidencias", Toast.LENGTH_SHORT);
-                            articuloNoEncontrado.show();
-                        }
-                    });
-                }
-            }
-            catch(Exception ex)
-            {
-                Log.e("ServicioRest","Error!", ex);
-                resultado = false;
-            }
-
-            return resultado;
-        }
-
-    }
-
-    public void buscar(View v) {
-
-        buscarForm = (EditText) findViewById(R.id.campo_buscar);
-        buscarFormS = buscarForm.getText().toString();
-        buscarFormSLow = buscarFormS.toLowerCase();
-
-        ObtenerArticulos articulos = new ObtenerArticulos();
-        articulos.execute();
     }
 }
