@@ -51,6 +51,7 @@ public class FragmentoLogin extends Fragment {
         botonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                emailForm.requestFocus();
                 emailFormS = emailForm.getText().toString().toLowerCase();
                 passFormS = passForm.getText().toString().toLowerCase();
                 Call<List<Usuario>> call = servicio.findAll();
@@ -67,12 +68,12 @@ public class FragmentoLogin extends Fragment {
                                 startActivity(perfil);
                                 logeado = true;
                             }
-                            if (!logeado) {
-                                Toast validacionUsuarioIncorrecta = Toast.makeText(getActivity().getApplicationContext(), "Usuario o contraseña incorrecto", Toast.LENGTH_SHORT);
-                                validacionUsuarioIncorrecta.show();
-                                emailForm.setText("");
-                                passForm.setText("");
-                            }
+                        }
+                        if (!logeado) {
+                            Toast validacionUsuarioIncorrecta = Toast.makeText(getActivity().getApplicationContext(), "Usuario o contraseña incorrecto", Toast.LENGTH_SHORT);
+                            validacionUsuarioIncorrecta.show();
+                            emailForm.setText("");
+                            passForm.setText("");
                         }
                     }
                     @Override
