@@ -2,6 +2,7 @@ package com.example.zigorlopezsanpelayo.vibbayza;
 
 import java.util.List;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -20,7 +21,7 @@ public interface ServicioArticulo {
     Call<List<Articulos>> findArtByEmail(@Path("email") String email);
 
     @POST("articulos")
-    Call<Articulos> create(Articulos entity);
+    Call<Articulos> create(@Body Articulos entity);
 
     @PUT("articulos/{id}")
     Call<Articulos> edit(@Path("id") int id, Articulos entity);
