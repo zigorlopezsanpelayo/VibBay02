@@ -14,7 +14,6 @@
     tools:showIn="@layout/activity_main">
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/til_nombre_articulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -28,7 +27,6 @@
             android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/til_precio_articulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -40,6 +38,17 @@
             android:hint="Precio"
             android:inputType="numberDecimal"
             android:singleLine="true" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@color/colorPrimaryDark"
+            android:id="@+id/imagenASubir"
+            android:layout_width="match_parent"
+            android:layout_height="200px" />
     </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
@@ -55,8 +64,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:backgroundTint="@color/colorAccent"
+            style="?android:textAppearanceSmall"
             android:text="Añadir"
-            android:textColor="@android:color/white" />
+            android:textStyle="bold"/>
     </LinearLayout>
 </LinearLayout>

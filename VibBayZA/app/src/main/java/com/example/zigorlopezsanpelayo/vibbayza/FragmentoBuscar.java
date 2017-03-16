@@ -11,10 +11,13 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.sql.Blob;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -67,7 +70,6 @@ public class FragmentoBuscar extends Fragment {
                     public void onResponse(Call<List<Articulos>> call, Response<List<Articulos>> response) {
                         List<Articulos> articulos = response.body();
                         for (final Articulos articulo : articulos) {
-                            Log.i("String", articulo.getTitulo());
                             char[] tituloChar = articulo.getTitulo().toLowerCase().toCharArray();
                             String tituloParcial = "";
                             for (int j=0; j<tituloChar.length; j++) {
@@ -98,4 +100,6 @@ public class FragmentoBuscar extends Fragment {
             }
         });
     }
+
+
 }
