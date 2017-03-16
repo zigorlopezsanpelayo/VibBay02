@@ -23,7 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FragmentoBuscar extends Fragment {
 
-    String BASE_URL = "http://192.168.0.16:8084/jsonweb/rest/";
+    String BASE_URL = "http://192.168.0.22:8084/jsonweb/rest/";
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())

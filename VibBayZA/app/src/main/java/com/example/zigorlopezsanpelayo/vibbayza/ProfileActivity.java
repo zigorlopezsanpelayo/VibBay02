@@ -47,10 +47,6 @@ import static com.example.zigorlopezsanpelayo.vibbayza.R.id.fragmento_articulos;
 public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    TextView articulo;
-    EditText nombreForm;
-    String nombreFormS;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -196,66 +192,4 @@ public class ProfileActivity extends AppCompatActivity
         }
     }
 
-
-    private class InsertarArticulo extends AsyncTask<String,Integer,Boolean> {
-
-        protected Boolean doInBackground(String... params) {
-
-            boolean resultado = true;
-            String emailUsuario = getIntent().getExtras().getString("emailUsuario");
-
-            HttpClient httpClient = new DefaultHttpClient();
-
-            HttpPost subirArticulo = new HttpPost("http://192.168.0.16:8084/jsonweb/rest/articulos");
-            subirArticulo.setHeader("content-type", "application/json");
-
-            try
-            {
-                JSONObject articulo = new JSONObject();
-
-                articulo.put("titulo", nombreFormS);
-                articulo.put("nombreImagen", "kkkkkkkkkkk");
-                articulo.put("email", emailUsuario);
-                articulo.put("estado", "false");
-                articulo.put("precio", "140000.99");
-                StringEntity entity = new StringEntity(articulo.toString());
-                subirArticulo.setEntity(entity);
-
-                HttpResponse resp = httpClient.execute(subirArticulo);
-                String respStr = EntityUtils.toString(resp.getEntity());
-
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        nombreForm.setText("");
-                        Toast articuloSubido = Toast.makeText(getApplicationContext(), "Artículo publicado", Toast.LENGTH_SHORT);
-                        articuloSubido.show();
-                    }
-                });
-
-                Log.i("string", articulo.toString());
-
-                if(!respStr.equals("true"))
-                    resultado = false;
-
-            }
-            catch(Exception ex)
-            {
-                Log.e("ServicioRest","Error!", ex);
-                resultado = false;
-            }
-
-            return resultado;
-        }
-    }
-
-    public void aniadirArticulo(View v) {
-
-        nombreForm = (EditText) findViewById(R.id.campo_nombre_articulo);
-        nombreFormS = nombreForm.getText().toString();
-
-        InsertarArticulo insertar = new InsertarArticulo();
-        insertar.execute();
-    }
 }
