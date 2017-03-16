@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.List;
@@ -56,6 +57,7 @@ public class FragmentoBuscar extends Fragment {
         botonBuscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                encontrado = false;
                 arts = (LinearLayout) getView().findViewById(R.id.encontrados);
                 arts.removeAllViews();
                 buscarFormS = buscarForm.getText().toString().toLowerCase();
@@ -75,9 +77,10 @@ public class FragmentoBuscar extends Fragment {
                                     final float precio = articulo.getPrecio();
                                     encontrado = true;
                                     articuloEncontrado = new TextView(getActivity().getApplicationContext());
+                                    articuloEncontrado.setBackgroundColor(Color.parseColor("#CFD8DC"));
                                     articuloEncontrado.setText(nombreArt + "  " + precio + "€");
                                     articuloEncontrado.setTextSize(35);
-                                    articuloEncontrado.setTextColor(Color.RED);
+                                    articuloEncontrado.setTextColor(Color.parseColor("#000000"));
                                     arts.addView(articuloEncontrado);
                                 }
                             }

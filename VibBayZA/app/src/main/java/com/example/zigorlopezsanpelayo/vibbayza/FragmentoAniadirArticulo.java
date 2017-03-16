@@ -34,9 +34,11 @@ public class FragmentoAniadirArticulo extends Fragment {
             .addConverterFactory(GsonConverterFactory.create())
             .build();
     protected ServicioArticulo servicio = retrofit.create(ServicioArticulo.class);
-    protected EditText nombreArticulo;
     protected Button botonAniadirArticulo;
+    protected EditText nombreArticulo;
+    protected EditText precioArticulo;
     protected String nombreArticuloS;
+    protected float precioArticuloF;
 
     public FragmentoAniadirArticulo() {
         // Required empty public constructor
@@ -54,13 +56,15 @@ public class FragmentoAniadirArticulo extends Fragment {
         super.onViewCreated(v, savedInstanceState);
         final String emailUsuario = getActivity().getIntent().getExtras().getString("emailUsuario");
         nombreArticulo = (EditText) v.findViewById(R.id.campo_nombre_articulo);
+        precioArticulo = (EditText) v.findViewById(R.id.campo_precio_articulo);
         nombreArticulo.requestFocus();
         botonAniadirArticulo = (Button) v.findViewById(R.id.boton_aniadir_articulo);
         botonAniadirArticulo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nombreArticuloS = nombreArticulo.getText().toString().toLowerCase();
-                Articulos articulo = new Articulos(3, nombreArticuloS, "jjjjjjjjjjjjjj", emailUsuario, false, 100000);
+                nombreArticuloS = nombreArticulo.getText().toString();
+                precioArticuloF = Float.valueOf(precioArticulo.getText().toString());
+                Articulos articulo = new Articulos(3, nombreArticuloS, "jjjjjjjjjjjjjj", emailUsuario, false, precioArticuloF);
                 Call<Articulos> call = servicio.create(articulo);
                 call.enqueue(new Callback<Articulos>() {
                     @Override
