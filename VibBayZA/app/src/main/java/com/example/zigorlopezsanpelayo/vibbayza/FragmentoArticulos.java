@@ -1,11 +1,14 @@
 package com.example.zigorlopezsanpelayo.vibbayza;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,10 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.Blob;
 import java.util.List;
 
 import retrofit2.Call;
@@ -38,6 +43,7 @@ public class FragmentoArticulos extends Fragment {
             .build();
     protected ServicioArticulo servicio = retrofit.create(ServicioArticulo.class);
     protected TextView articuloEncontrado;
+    protected ImageView imagenArticulo;
 
     public FragmentoArticulos() {
         // Required empty public constructor
@@ -69,6 +75,11 @@ public class FragmentoArticulos extends Fragment {
                 for (final Articulos articulo : articulos) {
                     final String nombreArt = articulo.getTitulo();
                     final float precio = articulo.getPrecio();
+                    final String imagenB64 = articulo.getNombreImagen();
+                    byte[] imagenByte = Base64.decode(imagenB64, Base64.DEFAULT);
+                    Bitmap imagen = BitmapFactory.decodeByteArray(imagenByte , 0, imagenByte.length);
+                    imagenArticulo = new ImageView(getActivity().getApplicationContext());
+                    imagenArticulo.setImageBitmap(imagen);
                     articuloEncontrado = new TextView(getActivity().getApplicationContext());
                     articuloEncontrado.setBackgroundColor(Color.parseColor("#CFD8DC"));
                     articuloEncontrado.setText(nombreArt + "  " + precio + "€");
@@ -76,6 +87,7 @@ public class FragmentoArticulos extends Fragment {
                     articuloEncontrado.setTextColor(Color.parseColor("#000000"));
                     LinearLayout arts = (LinearLayout) getView().findViewById(R.id.fragmento_articulos);
                     arts.addView(articuloEncontrado);
+                    arts.addView(imagenArticulo);
                 }
             }
             @Override

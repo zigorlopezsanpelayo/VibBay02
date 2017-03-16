@@ -1,7 +1,12 @@
 package com.example.zigorlopezsanpelayo.vibbayza;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +30,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.app.Activity.RESULT_OK;
 import static com.example.zigorlopezsanpelayo.vibbayza.R.menu.main;
 
 public class FragmentoAniadirArticulo extends Fragment {
@@ -39,6 +46,8 @@ public class FragmentoAniadirArticulo extends Fragment {
     protected EditText precioArticulo;
     protected String nombreArticuloS;
     protected float precioArticuloF;
+    private static final int RESULT_LOAD_IMAGE = 1;
+    protected ImageView imagenASubir;
 
     public FragmentoAniadirArticulo() {
         // Required empty public constructor
@@ -53,6 +62,15 @@ public class FragmentoAniadirArticulo extends Fragment {
     }
 
     public void onViewCreated (View v, Bundle savedInstanceState) {
+        imagenASubir = (ImageView) getView().findViewById(R.id.imagenASubir);
+        imagenASubir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent galeria = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(galeria, RESULT_LOAD_IMAGE);
+            }
+        });
+
         super.onViewCreated(v, savedInstanceState);
         final String emailUsuario = getActivity().getIntent().getExtras().getString("emailUsuario");
         nombreArticulo = (EditText) v.findViewById(R.id.campo_nombre_articulo);
@@ -81,4 +99,13 @@ public class FragmentoAniadirArticulo extends Fragment {
         });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
+            Uri imagenSeleccionada = data.getData();
+            imagenASubir.setImageURI(imagenSeleccionada);
+        }
+
+    }
 }
