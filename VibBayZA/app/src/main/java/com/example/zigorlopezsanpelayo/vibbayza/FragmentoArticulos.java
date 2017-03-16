@@ -70,9 +70,10 @@ public class FragmentoArticulos extends Fragment {
                     final String nombreArt = articulo.getTitulo();
                     final float precio = articulo.getPrecio();
                     articuloEncontrado = new TextView(getActivity().getApplicationContext());
+                    articuloEncontrado.setBackgroundColor(Color.parseColor("#CFD8DC"));
                     articuloEncontrado.setText(nombreArt + "  " + precio + "€");
                     articuloEncontrado.setTextSize(35);
-                    articuloEncontrado.setTextColor(Color.RED);
+                    articuloEncontrado.setTextColor(Color.parseColor("#000000"));
                     LinearLayout arts = (LinearLayout) getView().findViewById(R.id.fragmento_articulos);
                     arts.addView(articuloEncontrado);
                 }
