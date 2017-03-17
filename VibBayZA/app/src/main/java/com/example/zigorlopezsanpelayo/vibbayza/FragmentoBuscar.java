@@ -1,9 +1,12 @@
 package com.example.zigorlopezsanpelayo.vibbayza;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +42,7 @@ public class FragmentoBuscar extends Fragment {
     protected boolean encontrado;
     protected TextView articuloEncontrado;
     protected LinearLayout arts;
+    protected ImageView imagenArticulo;
 
     public FragmentoBuscar() {
         // Required empty public constructor
@@ -77,6 +81,11 @@ public class FragmentoBuscar extends Fragment {
                                 if (buscarFormS.equals(tituloParcial)) {
                                     final String nombreArt = articulo.getTitulo();
                                     final float precio = articulo.getPrecio();
+                                    final String imagenB64 = articulo.getNombreImagen();
+                                    byte[] imagenByte = Base64.decode(imagenB64, Base64.DEFAULT);
+                                    Bitmap imagen = BitmapFactory.decodeByteArray(imagenByte , 0, imagenByte.length);
+                                    imagenArticulo = new ImageView(getActivity().getApplicationContext());
+                                    imagenArticulo.setImageBitmap(imagen);
                                     encontrado = true;
                                     articuloEncontrado = new TextView(getActivity().getApplicationContext());
                                     articuloEncontrado.setBackgroundColor(Color.parseColor("#CFD8DC"));
