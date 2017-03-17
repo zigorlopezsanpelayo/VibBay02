@@ -89,6 +89,7 @@ public class FragmentoAniadirArticulo extends Fragment {
         botonAniadirArticulo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                nombreArticulo.requestFocus();
                 nombreArticuloS = nombreArticulo.getText().toString();
                 precioArticuloS = precioArticulo.getText().toString();
                 Log.i("String", nombreArticuloS);

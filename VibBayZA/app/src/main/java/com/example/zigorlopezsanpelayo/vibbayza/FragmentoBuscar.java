@@ -64,6 +64,7 @@ public class FragmentoBuscar extends Fragment {
         botonBuscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                buscarForm.requestFocus();
                 encontrado = false;
                 arts = (LinearLayout) getView().findViewById(R.id.encontrados);
                 arts.removeAllViews();
@@ -88,11 +89,16 @@ public class FragmentoBuscar extends Fragment {
                                     imagenArticulo.setImageBitmap(imagen);
                                     encontrado = true;
                                     articuloEncontrado = new TextView(getActivity().getApplicationContext());
-                                    articuloEncontrado.setBackgroundColor(Color.parseColor("#CFD8DC"));
                                     articuloEncontrado.setText(nombreArt + "  " + precio + "€");
-                                    articuloEncontrado.setTextSize(35);
+                                    articuloEncontrado.setTextSize(20);
                                     articuloEncontrado.setTextColor(Color.parseColor("#000000"));
-                                    arts.addView(articuloEncontrado);
+                                    LinearLayout art = new LinearLayout(getActivity().getApplicationContext());
+                                    art.addView(articuloEncontrado);
+                                    art.addView(imagenArticulo);
+                                    imagenArticulo.getLayoutParams().height = 300;
+                                    imagenArticulo.getLayoutParams().width = 300;
+                                    imagenArticulo.setImageBitmap(imagen);
+                                    arts.addView(art);
                                 }
                             }
                         }
