@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -92,8 +95,6 @@ public class FragmentoAniadirArticulo extends Fragment {
                 nombreArticulo.requestFocus();
                 nombreArticuloS = nombreArticulo.getText().toString();
                 precioArticuloS = precioArticulo.getText().toString();
-                Log.i("String", nombreArticuloS);
-                Log.i("String", precioArticuloS);
                 if (nombreArticuloS.equals("") || precioArticuloS.equals("") || imagenB64.equals("")) {
                     Toast precioObligatorio = Toast.makeText(getActivity().getApplicationContext(), "Debes rellenar todos los campos", Toast.LENGTH_SHORT);
                     precioObligatorio.show();
@@ -142,15 +143,26 @@ public class FragmentoAniadirArticulo extends Fragment {
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options);
+            Bitmap bitmapOrinignal = BitmapFactory.decodeFile(imagePath, options);
+
+            Bitmap imagenReescalada = imagenReescalada(bitmapOrinignal);
+
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            imagenReescalada.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
             byte[] imagenByte = byteArrayOutputStream.toByteArray();
             imagenB64 = Base64.encodeToString(imagenByte, Base64.DEFAULT);
-            imagenASubir.setImageBitmap(bitmap);
+            imagenASubir.setImageBitmap(imagenReescalada);
             cursor.close();
 
         }
+    }
 
+    public Bitmap imagenReescalada (Bitmap bitmap) {
+        float anchoEscalado = ((float) 500) / bitmap.getWidth();
+        float altoEscalado = ((float) 350) / bitmap.getHeight();
+        Matrix matriz = new Matrix();
+        matriz.postScale(anchoEscalado, altoEscalado);
+        Bitmap bitmapReescaclado = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matriz, true);
+        return bitmapReescaclado;
     }
 }

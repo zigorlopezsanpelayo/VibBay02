@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ public class FragmentoBuscar extends Fragment {
     protected TextView articuloEncontrado;
     protected LinearLayout arts;
     protected ImageView imagenArticulo;
+    protected Button botonPujar;
 
     public FragmentoBuscar() {
         // Required empty public constructor
@@ -93,12 +95,21 @@ public class FragmentoBuscar extends Fragment {
                                     articuloEncontrado.setTextSize(20);
                                     articuloEncontrado.setTextColor(Color.parseColor("#000000"));
                                     LinearLayout art = new LinearLayout(getActivity().getApplicationContext());
+                                    botonPujar = new Button(getActivity().getApplicationContext());
+                                    botonPujar.setText("Pujar");
+                                    botonPujar.setBackgroundColor(Color.parseColor("#F8BBD0"));
+                                    botonPujar.setPadding(10, 10, 10, 10);
+                                    art.setOrientation(LinearLayout.VERTICAL);
+                                    art.setGravity(Gravity.CENTER_HORIZONTAL);
+                                    art.setBackgroundColor(Color.parseColor("#E3F2FD"));
                                     art.addView(articuloEncontrado);
                                     art.addView(imagenArticulo);
-                                    imagenArticulo.getLayoutParams().height = 300;
-                                    imagenArticulo.getLayoutParams().width = 300;
+                                    art.addView(botonPujar);
+                                    imagenArticulo.getLayoutParams().height = 350;
+                                    imagenArticulo.getLayoutParams().width = 500;
                                     imagenArticulo.setImageBitmap(imagen);
                                     arts.addView(art);
+
                                 }
                             }
                         }
