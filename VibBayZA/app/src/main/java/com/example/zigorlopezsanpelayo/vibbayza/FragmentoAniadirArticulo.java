@@ -87,6 +87,7 @@ public class FragmentoAniadirArticulo extends Fragment {
         });
         final String emailUsuario = getActivity().getIntent().getExtras().getString("emailUsuario");
         nombreArticulo = (EditText) v.findViewById(R.id.campo_nombre_articulo);
+        nombreArticulo.requestFocus();
         precioArticulo = (EditText) v.findViewById(R.id.campo_precio_articulo);
         botonAniadirArticulo = (Button) v.findViewById(R.id.boton_aniadir_articulo);
         botonAniadirArticulo.setOnClickListener(new View.OnClickListener() {
@@ -109,6 +110,7 @@ public class FragmentoAniadirArticulo extends Fragment {
                         public void onResponse(Call<Articulos> call, Response<Articulos> response) {
                             Toast articuloSubido = Toast.makeText(getActivity().getApplicationContext(), "Artículo publicado", Toast.LENGTH_SHORT);
                             articuloSubido.show();
+                            
                         }
                         @Override
                         public void onFailure(Call<Articulos> call, Throwable t) {

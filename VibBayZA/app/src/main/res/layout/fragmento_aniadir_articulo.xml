@@ -42,13 +42,15 @@
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
         <ImageView
-            android:src="@color/colorPrimaryDark"
+            android:src="@drawable/plus"
             android:id="@+id/imagenASubir"
-            android:layout_width="match_parent"
-            android:layout_height="200px" />
+            android:layout_width="500px"
+            android:layout_height="350px" />
     </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
