@@ -62,13 +62,17 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/encontrados"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="20px"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical">
-    </LinearLayout>
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/encontrados"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20px"
+            android:orientation="vertical">
+        </LinearLayout>
+    </ScrollView>
     
 </LinearLayout>

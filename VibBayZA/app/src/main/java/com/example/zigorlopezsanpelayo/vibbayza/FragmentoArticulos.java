@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.shapes.Shape;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,6 +47,7 @@ public class FragmentoArticulos extends Fragment {
     protected ServicioArticulo servicio = retrofit.create(ServicioArticulo.class);
     protected TextView articuloEncontrado;
     protected ImageView imagenArticulo;
+    protected Button botonEditar;
 
     public FragmentoArticulos() {
         // Required empty public constructor
@@ -79,15 +83,26 @@ public class FragmentoArticulos extends Fragment {
                     byte[] imagenByte = Base64.decode(imagenB64, Base64.DEFAULT);
                     Bitmap imagen = BitmapFactory.decodeByteArray(imagenByte , 0, imagenByte.length);
                     imagenArticulo = new ImageView(getActivity().getApplicationContext());
-                    imagenArticulo.setImageBitmap(imagen);
                     articuloEncontrado = new TextView(getActivity().getApplicationContext());
-                    articuloEncontrado.setBackgroundColor(Color.parseColor("#CFD8DC"));
                     articuloEncontrado.setText(nombreArt + "  " + precio + "€");
-                    articuloEncontrado.setTextSize(35);
+                    articuloEncontrado.setTextSize(20);
                     articuloEncontrado.setTextColor(Color.parseColor("#000000"));
                     LinearLayout arts = (LinearLayout) getView().findViewById(R.id.fragmento_articulos);
-                    arts.addView(articuloEncontrado);
-                    arts.addView(imagenArticulo);
+                    LinearLayout art = new LinearLayout(getActivity().getApplicationContext());
+                    botonEditar = new Button(getActivity().getApplicationContext());
+                    botonEditar.setText("Editar");
+                    botonEditar.setBackgroundColor(Color.parseColor("#F8BBD0"));
+                    botonEditar.setPadding(10, 10, 10, 10);
+                    art.setOrientation(LinearLayout.VERTICAL);
+                    art.setGravity(Gravity.CENTER_HORIZONTAL);
+                    art.setBackgroundColor(Color.parseColor("#E3F2FD"));
+                    art.addView(articuloEncontrado);
+                    art.addView(imagenArticulo);
+                    art.addView(botonEditar);
+                    imagenArticulo.getLayoutParams().height = 350;
+                    imagenArticulo.getLayoutParams().width = 500;
+                    imagenArticulo.setImageBitmap(imagen);
+                    arts.addView(art);
                 }
             }
             @Override
