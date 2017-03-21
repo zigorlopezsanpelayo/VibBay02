@@ -31,8 +31,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -93,6 +98,19 @@ public class FragmentoAniadirArticulo extends Fragment {
         botonAniadirArticulo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+                DatabaseReference dbRef =
+                        FirebaseDatabase.getInstance().getReference()
+                                .child("usuarios");
+
+                Map<String, String> usuarioN = new HashMap<>();
+                usuarioN.put("email", "down");
+                usuarioN.put("pass", "down");
+
+                dbRef.child("usuarioN").setValue(usuarioN);
+
+
                 nombreArticulo.requestFocus();
                 nombreArticuloS = nombreArticulo.getText().toString();
                 precioArticuloS = precioArticulo.getText().toString();
@@ -103,6 +121,7 @@ public class FragmentoAniadirArticulo extends Fragment {
                 else {
                     nombreArticuloS = nombreArticulo.getText().toString();
                     precioArticuloF = Float.parseFloat(precioArticulo.getText().toString());
+
                     Articulos articulo = new Articulos(3, nombreArticuloS, imagenB64, emailUsuario, false, precioArticuloF);
                     Call<Articulos> call = servicio.create(articulo);
                     call.enqueue(new Callback<Articulos>() {
