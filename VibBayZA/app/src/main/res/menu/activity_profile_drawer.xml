@@ -3,17 +3,17 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/login"
+            android:id="@+id/logout"
             android:icon="@drawable/login"
-            android:title="Login" />
+            android:title="Cerrar sesión" />
         <item
-            android:id="@+id/casoUso2"
+            android:id="@+id/articulos"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="CasoUso2" />
+            android:title="Mis artículos" />
         <item
-            android:id="@+id/casoUso3"
+            android:id="@+id/pujas"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="CasoUso3" />
+            android:title="Mis pujas" />
     </group>
 
 </menu>
