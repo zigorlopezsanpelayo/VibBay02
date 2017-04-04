@@ -1,27 +1,35 @@
 {
   "project_info": {
-    "project_number": "345397824300",
-    "firebase_url": "https://vibbay02.firebaseio.com",
-    "project_id": "vibbay02",
-    "storage_bucket": "vibbay02.appspot.com"
+    "project_number": "287258449996",
+    "firebase_url": "https://vibbayza-1b85a.firebaseio.com",
+    "project_id": "vibbayza-1b85a",
+    "storage_bucket": "vibbayza-1b85a.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:345397824300:android:b7e4e8cb8ff39dc4",
+        "mobilesdk_app_id": "1:287258449996:android:b7e4e8cb8ff39dc4",
         "android_client_info": {
           "package_name": "com.example.zigorlopezsanpelayo.vibbayza"
         }
       },
       "oauth_client": [
         {
-          "client_id": "345397824300-ajnvcdrkj0uoavog1q3prkgb0ovcqr37.apps.googleusercontent.com",
+          "client_id": "287258449996-86vonjcjtt21tj0e3igi1mkmnlg7ugnf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.zigorlopezsanpelayo.vibbayza",
+            "certificate_hash": "8e3746ca779a4e108b64fd229674b1cdada69973"
+          }
+        },
+        {
+          "client_id": "287258449996-bop2vnda33o9l2f1uieuh34ik93crstm.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAsKdyDx611MHFQYRemeqw5TL4HH9XJqks"
+          "current_key": "AIzaSyA1wsBBRAxP1A-mTXNf9AxSpPxHeQPj5gU"
         }
       ],
       "services": {
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "287258449996-bop2vnda33o9l2f1uieuh34ik93crstm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
