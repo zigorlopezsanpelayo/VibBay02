@@ -93,6 +93,8 @@ public class FragmentoAniadirArticulo extends Fragment {
                     precioArticuloF = Float.parseFloat(precioArticulo.getText().toString());
 
                     aniadirArticulo("1", nombreArticuloS, imagenB64, emailUsuario, false, precioArticuloF);
+                    Toast articuloAniadido = Toast.makeText(getActivity().getApplicationContext(), "Artículo añadido correctamente", Toast.LENGTH_SHORT);
+                    articuloAniadido.show();
                 }
             }
         });
