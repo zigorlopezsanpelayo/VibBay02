@@ -7,15 +7,13 @@ package com.example.zigorlopezsanpelayo.vibbayza;
 
 public class Articulos {
 
-    private int id;
     private String titulo;
     private String nombreImagen;
     private String email;
     private boolean estado;
     private float precio;
 
-    public Articulos(int id, String titulo, String nombreImagen, String email, boolean estado, float precio) {
-        this.id = id;
+    public Articulos(String titulo, String nombreImagen, String email, boolean estado, float precio) {
         this.titulo = titulo;
         this.nombreImagen = nombreImagen;
         this.email = email;
@@ -23,9 +21,6 @@ public class Articulos {
         this.precio = precio;
     }
 
-    public int getId() {
-        return id;
-    }
 
     public String getTitulo() {
         return titulo;
@@ -45,10 +40,6 @@ public class Articulos {
 
     public float getPrecio() {
         return precio;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public void setTitulo(String titulo) {
