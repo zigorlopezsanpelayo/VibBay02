@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "287258449996-3nbts0159t0g2p6ort3ha35mtuh84npo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.zigorlopezsanpelayo.vibbayza",
+            "certificate_hash": "e93895f75b070eb908fd2a87a7fc54875956eb3b"
+          }
+        },
+        {
           "client_id": "287258449996-86vonjcjtt21tj0e3igi1mkmnlg7ugnf.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

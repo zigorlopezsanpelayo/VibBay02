@@ -69,7 +69,6 @@ public class FragmentoArticulos extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String propietario = (String) snapshot.child("email").getValue();
-                    Log.i("String", propietario);
                     if (propietario.equals(emailUsuario)) {
                         String titulo = (String) snapshot.child("titulo").getValue();
                         long precio = (long) snapshot.child("precio").getValue();
