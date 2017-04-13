@@ -3,6 +3,7 @@ package com.example.zigorlopezsanpelayo.vibbayza;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +59,7 @@ public class FragmentoLogin extends Fragment {
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String email = (String) snapshot.child("email").getValue();
-                                    String pass = (String) snapshot.child("pass").getValue();
+                                    String pass = snapshot.child("pass").getValue().toString();
 
                                     if (email.equals(emailFormS) && pass.equals(passFormS)) {
                                         Toast validacionUsuarioCorrecta = Toast.makeText(getActivity().getApplicationContext(), "Logeado con éxito", Toast.LENGTH_SHORT);
