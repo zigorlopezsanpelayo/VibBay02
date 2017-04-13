@@ -8,6 +8,10 @@ public class Usuario {
     private String email;
     private String pass;
 
+    public Usuario() {
+
+    }
+
     public Usuario (String email, String pass) {
         this.email = email;
         this.pass = pass;

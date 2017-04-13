@@ -20,34 +20,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-<<<<<<< Updated upstream
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-=======
-import java.io.ByteArrayOutputStream;
->>>>>>> Stashed changes
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import static android.app.Activity.RESULT_OK;
 
 public class FragmentoAniadirArticulo extends Fragment {
 
-    String BASE_URL = "http://192.168.0.22:8084/jsonweb/rest/";
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-    protected ServicioArticulo servicio = retrofit.create(ServicioArticulo.class);
     protected Button botonAniadirArticulo;
     protected EditText nombreArticulo;
     protected EditText precioArticulo;
@@ -57,6 +39,10 @@ public class FragmentoAniadirArticulo extends Fragment {
     private static final int RESULT_LOAD_IMAGE = 1;
     protected ImageView imagenASubir;
     protected String imagenB64 = "";
+
+    DatabaseReference refArticulos =
+            FirebaseDatabase.getInstance().getReference()
+                    .child("articulos");
 
     public FragmentoAniadirArticulo() {
         // Required empty public constructor
@@ -94,44 +80,19 @@ public class FragmentoAniadirArticulo extends Fragment {
             @Override
             public void onClick(View v) {
 
-
-                DatabaseReference dbRef =
-                        FirebaseDatabase.getInstance().getReference()
-                                .child("usuarios");
-
-                Map<String, String> usuarioN = new HashMap<>();
-                usuarioN.put("email", "down");
-                usuarioN.put("pass", "down");
-
-                dbRef.child("usuarioN").setValue(usuarioN);
-
-
                 nombreArticulo.requestFocus();
                 nombreArticuloS = nombreArticulo.getText().toString();
                 precioArticuloS = precioArticulo.getText().toString();
 
                 if (nombreArticuloS.equals("") || precioArticuloS.equals("") || imagenB64.equals("")) {
-                    Toast precioObligatorio = Toast.makeText(getActivity().getApplicationContext(), "Debes rellenar todos los campos", Toast.LENGTH_SHORT);
-                    precioObligatorio.show();
+                    Toast campoVacio = Toast.makeText(getActivity().getApplicationContext(), "Debes rellenar todos los campos", Toast.LENGTH_SHORT);
+                    campoVacio.show();
                 }
                 else {
                     nombreArticuloS = nombreArticulo.getText().toString();
                     precioArticuloF = Float.parseFloat(precioArticulo.getText().toString());
 
-                    Articulos articulo = new Articulos(3, nombreArticuloS, imagenB64, emailUsuario, false, precioArticuloF);
-                    Call<Articulos> call = servicio.create(articulo);
-                    call.enqueue(new Callback<Articulos>() {
-                        @Override
-                        public void onResponse(Call<Articulos> call, Response<Articulos> response) {
-                            Toast articuloSubido = Toast.makeText(getActivity().getApplicationContext(), "Artículo publicado", Toast.LENGTH_SHORT);
-                            articuloSubido.show();
-                            
-                        }
-                        @Override
-                        public void onFailure(Call<Articulos> call, Throwable t) {
-
-                        }
-                    });
+                    aniadirArticulo("1", nombreArticuloS, imagenB64, emailUsuario, false, precioArticuloF);
                 }
             }
         });
@@ -182,5 +143,10 @@ public class FragmentoAniadirArticulo extends Fragment {
         matriz.postScale(anchoEscalado, altoEscalado);
         Bitmap bitmapReescaclado = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matriz, true);
         return bitmapReescaclado;
+    }
+
+    private void aniadirArticulo(String artId, String titulo, String foto, String propietario, boolean estado, float precio) {
+        Articulos articulo = new Articulos(titulo, foto, propietario, estado, precio);
+        refArticulos.child(artId).setValue(articulo);
     }
 }
