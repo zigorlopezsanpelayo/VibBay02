@@ -5,31 +5,22 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.SyncStateContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
+<<<<<<< Updated upstream
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -39,14 +30,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+=======
+import java.io.ByteArrayOutputStream;
+>>>>>>> Stashed changes
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
 import static android.app.Activity.RESULT_OK;
-import static com.example.zigorlopezsanpelayo.vibbayza.R.menu.main;
 
 public class FragmentoAniadirArticulo extends Fragment {
 
@@ -80,6 +72,7 @@ public class FragmentoAniadirArticulo extends Fragment {
 
     public void onViewCreated (View v, Bundle savedInstanceState) {
         super.onViewCreated(v, savedInstanceState);
+
         imagenASubir = (ImageView) getView().findViewById(R.id.imagenASubir);
         imagenASubir.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,10 +83,12 @@ public class FragmentoAniadirArticulo extends Fragment {
                 }
             }
         });
+
         final String emailUsuario = getActivity().getIntent().getExtras().getString("emailUsuario");
         nombreArticulo = (EditText) v.findViewById(R.id.campo_nombre_articulo);
         nombreArticulo.requestFocus();
         precioArticulo = (EditText) v.findViewById(R.id.campo_precio_articulo);
+
         botonAniadirArticulo = (Button) v.findViewById(R.id.boton_aniadir_articulo);
         botonAniadirArticulo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +109,7 @@ public class FragmentoAniadirArticulo extends Fragment {
                 nombreArticulo.requestFocus();
                 nombreArticuloS = nombreArticulo.getText().toString();
                 precioArticuloS = precioArticulo.getText().toString();
+
                 if (nombreArticuloS.equals("") || precioArticuloS.equals("") || imagenB64.equals("")) {
                     Toast precioObligatorio = Toast.makeText(getActivity().getApplicationContext(), "Debes rellenar todos los campos", Toast.LENGTH_SHORT);
                     precioObligatorio.show();
@@ -156,6 +152,7 @@ public class FragmentoAniadirArticulo extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
             Uri imagenSeleccionada = data.getData();
             String[] filePath = { MediaStore.Images.Media.DATA };
