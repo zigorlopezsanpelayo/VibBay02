@@ -57,7 +57,7 @@ public class FragmentoLogin extends Fragment {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    String email = (String) snapshot.child("nombre").getValue();
+                                    String email = (String) snapshot.child("email").getValue();
                                     String pass = (String) snapshot.child("pass").getValue();
 
                                     if (email.equals(emailFormS) && pass.equals(passFormS)) {

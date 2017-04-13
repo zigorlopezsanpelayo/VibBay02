@@ -21,6 +21,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.sql.Blob;
 import java.util.List;
 import retrofit2.Call;
@@ -31,12 +37,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FragmentoBuscar extends Fragment {
 
-    String BASE_URL = "http://192.168.0.22:8084/jsonweb/rest/";
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-    protected ServicioArticulo servicio = retrofit.create(ServicioArticulo.class);
     protected Button botonBuscar;
     protected EditText buscarForm;
     protected String buscarFormS;
@@ -45,6 +45,10 @@ public class FragmentoBuscar extends Fragment {
     protected LinearLayout arts;
     protected ImageView imagenArticulo;
     protected Button botonPujar;
+
+    DatabaseReference refArticulos =
+            FirebaseDatabase.getInstance().getReference()
+                    .child("articulos");
 
     public FragmentoBuscar() {
         // Required empty public constructor
@@ -71,27 +75,27 @@ public class FragmentoBuscar extends Fragment {
                 arts = (LinearLayout) getView().findViewById(R.id.encontrados);
                 arts.removeAllViews();
                 buscarFormS = buscarForm.getText().toString().toLowerCase();
-                Call<List<Articulos>> call = servicio.findAll();
-                call.enqueue(new Callback<List<Articulos>>() {
+
+                refArticulos.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onResponse(Call<List<Articulos>> call, Response<List<Articulos>> response) {
-                        List<Articulos> articulos = response.body();
-                        for (final Articulos articulo : articulos) {
-                            char[] tituloChar = articulo.getTitulo().toLowerCase().toCharArray();
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            String titulo = (String) snapshot.child("titulo").getValue();
+
+                            char[] tituloChar = titulo.toLowerCase().toCharArray();
                             String tituloParcial = "";
                             for (int j=0; j<tituloChar.length; j++) {
                                 tituloParcial = tituloParcial + tituloChar[j];
                                 if (buscarFormS.equals(tituloParcial)) {
-                                    final String nombreArt = articulo.getTitulo();
-                                    final float precio = articulo.getPrecio();
-                                    final String imagenB64 = articulo.getNombreImagen();
+                                    long precio = (long) snapshot.child("precio").getValue();
+                                    String imagenB64 = (String) snapshot.child("nombreImagen").getValue();
                                     byte[] imagenByte = Base64.decode(imagenB64, Base64.DEFAULT);
                                     Bitmap imagen = BitmapFactory.decodeByteArray(imagenByte , 0, imagenByte.length);
                                     imagenArticulo = new ImageView(getActivity().getApplicationContext());
                                     imagenArticulo.setImageBitmap(imagen);
                                     encontrado = true;
                                     articuloEncontrado = new TextView(getActivity().getApplicationContext());
-                                    articuloEncontrado.setText(nombreArt + "  " + precio + "€");
+                                    articuloEncontrado.setText(titulo + "  " + precio + "€");
                                     articuloEncontrado.setTextSize(20);
                                     articuloEncontrado.setTextColor(Color.parseColor("#000000"));
                                     LinearLayout art = new LinearLayout(getActivity().getApplicationContext());
@@ -117,10 +121,10 @@ public class FragmentoBuscar extends Fragment {
                             Toast articuloNoEncontrado = Toast.makeText(getActivity().getApplicationContext(), "No hay coincidencias", Toast.LENGTH_SHORT);
                             articuloNoEncontrado.show();
                         }
+
                     }
                     @Override
-                    public void onFailure(Call<List<Articulos>> call, Throwable t) {
-
+                    public void onCancelled(DatabaseError databaseError) {
                     }
                 });
             }
