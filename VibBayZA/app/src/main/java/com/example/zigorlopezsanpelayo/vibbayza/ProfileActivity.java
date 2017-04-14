@@ -47,6 +47,8 @@ import static com.example.zigorlopezsanpelayo.vibbayza.R.id.fragmento_articulos;
 public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private String nombreUsuario;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -66,6 +68,8 @@ public class ProfileActivity extends AppCompatActivity
                 .replace(R.id.content_main, fragmentoPrincipal)
                 .commit();
         getSupportActionBar().setTitle(getIntent().getExtras().getString("emailUsuario"));
+
+        nombreUsuario = getIntent().getExtras().getString("emailUsuario");
 
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_profile);
@@ -192,4 +196,7 @@ public class ProfileActivity extends AppCompatActivity
         }
     }
 
+    public String getNombreUsuario() {
+        return nombreUsuario;
+    }
 }
