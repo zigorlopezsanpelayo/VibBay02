@@ -25,6 +25,7 @@ public class FragmentoLogin extends Fragment {
     protected String emailFormS;
     protected String passFormS;
     protected boolean logeado;
+    protected String emailLogeado;
 
     DatabaseReference refUsuarios =
             FirebaseDatabase.getInstance().getReference()
@@ -68,6 +69,7 @@ public class FragmentoLogin extends Fragment {
                                         perfil.putExtra("emailUsuario", email);
                                         startActivity(perfil);
                                         logeado = true;
+                                        emailLogeado = email;
                                     }
                                 }
 
@@ -86,6 +88,22 @@ public class FragmentoLogin extends Fragment {
 
             }
         });
+    }
+
+    public String getEmailLogeado() {
+        return emailLogeado;
+    }
+
+    public void setEmailLogeado(String emailLogeado) {
+        this.emailLogeado = emailLogeado;
+    }
+
+    public boolean getLogeado() {
+        return logeado;
+    }
+
+    public void setLogeado(boolean logeado) {
+        this.logeado = logeado;
     }
 }
 
