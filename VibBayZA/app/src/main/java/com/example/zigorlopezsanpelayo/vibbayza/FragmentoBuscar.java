@@ -136,7 +136,7 @@ public class FragmentoBuscar extends Fragment {
                                                                 pujaVacia.show();
                                                             }
                                                             else if (!(Float.parseFloat(puja) < precio)) {
-                                                                aniadirPuja("1", nombreUsuario, puja, nombreArticulo);
+                                                                aniadirPuja("2", nombreUsuario, puja, nombreArticulo);
                                                                 Toast pujaExitosa = Toast.makeText(getActivity().getApplicationContext(), "Puja realizada correctamente", Toast.LENGTH_SHORT);
                                                                 pujaExitosa.show();
                                                             }
@@ -187,8 +187,6 @@ public class FragmentoBuscar extends Fragment {
     }
 
     private void aniadirPuja(String pujaId, String email, String cantidad, String titulo) {
-        Log.i("String", email);
-        Log.i("String", titulo);
         Puja puja = new Puja(email, cantidad, titulo);
         refPujas.child(pujaId).setValue(puja);
     }

@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -35,7 +36,7 @@ public class FragmentoArticulos extends Fragment {
 
     protected TextView articuloEncontrado;
     protected ImageView imagenArticulo;
-    protected Button botonEditar;
+    protected Button botonVerPujas;
 
     DatabaseReference refArticulos =
             FirebaseDatabase.getInstance().getReference()
@@ -70,7 +71,7 @@ public class FragmentoArticulos extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String propietario = (String) snapshot.child("email").getValue();
                     if (propietario.equals(emailUsuario)) {
-                        String titulo = (String) snapshot.child("titulo").getValue();
+                        final String titulo = (String) snapshot.child("titulo").getValue();
                         long precio = (long) snapshot.child("precio").getValue();
 
                         String imagenB64 = (String) snapshot.child("nombreImagen").getValue();
@@ -83,16 +84,39 @@ public class FragmentoArticulos extends Fragment {
                         articuloEncontrado.setTextColor(Color.parseColor("#000000"));
                         LinearLayout arts = (LinearLayout) getView().findViewById(R.id.fragmento_articulos);
                         LinearLayout art = new LinearLayout(getActivity().getApplicationContext());
-                        botonEditar = new Button(getActivity().getApplicationContext());
-                        botonEditar.setText("Editar");
-                        botonEditar.setBackgroundColor(Color.parseColor("#F8BBD0"));
-                        botonEditar.setPadding(10, 10, 10, 10);
+                        botonVerPujas = new Button(getActivity().getApplicationContext());
+                        botonVerPujas.setText("Ver pujas");
+                        botonVerPujas.setBackgroundColor(Color.parseColor("#F8BBD0"));
+                        botonVerPujas.setPadding(10, 10, 10, 10);
+                        botonVerPujas.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                boolean fragmentTransaction = false;
+                                Fragment fragmentoPujas = null;
+
+                                fragmentoPujas = new FragmentoPujasRecibidas();
+                                fragmentTransaction = true;
+
+                                Bundle argTitulo = new Bundle();
+                                argTitulo.putString("titulo", titulo);
+                                fragmentoPujas.setArguments(argTitulo);
+
+                                if(fragmentTransaction) {
+                                    getFragmentManager().beginTransaction()
+                                            .replace(R.id.content_main, fragmentoPujas)
+                                            .commit();
+
+                                    ((ProfileActivity)getActivity()).getSupportActionBar().setTitle("Pujas");
+                                }
+
+                            }
+                        });
                         art.setOrientation(LinearLayout.VERTICAL);
                         art.setGravity(Gravity.CENTER_HORIZONTAL);
                         art.setBackgroundColor(Color.parseColor("#E3F2FD"));
                         art.addView(articuloEncontrado);
                         art.addView(imagenArticulo);
-                        art.addView(botonEditar);
+                        art.addView(botonVerPujas);
                         imagenArticulo.getLayoutParams().height = 350;
                         imagenArticulo.getLayoutParams().width = 500;
                         imagenArticulo.setImageBitmap(imagen);
