@@ -12,7 +12,9 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +23,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.ByteArrayOutputStream;
 
@@ -39,6 +44,8 @@ public class FragmentoAniadirArticulo extends Fragment {
     private static final int RESULT_LOAD_IMAGE = 1;
     protected ImageView imagenASubir;
     protected String imagenB64 = "";
+    protected long numArts = 1;
+    protected String numArtsS = "1";
 
     DatabaseReference refArticulos =
             FirebaseDatabase.getInstance().getReference()
@@ -58,6 +65,23 @@ public class FragmentoAniadirArticulo extends Fragment {
 
     public void onViewCreated (View v, Bundle savedInstanceState) {
         super.onViewCreated(v, savedInstanceState);
+
+        refArticulos.getParent().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snap: dataSnapshot.getChildren()) {
+                    if (snap.getKey().equals("articulos")) {
+                        numArts = snap.getChildrenCount() + 1;
+                        numArtsS = Long.toString(numArts);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         imagenASubir = (ImageView) getView().findViewById(R.id.imagenASubir);
         imagenASubir.setOnClickListener(new View.OnClickListener() {
@@ -92,9 +116,10 @@ public class FragmentoAniadirArticulo extends Fragment {
                     nombreArticuloS = nombreArticulo.getText().toString();
                     precioArticuloF = Float.parseFloat(precioArticulo.getText().toString());
 
-                    aniadirArticulo("2", nombreArticuloS, imagenB64, emailUsuario, false, precioArticuloF);
+                    aniadirArticulo(numArtsS, nombreArticuloS, imagenB64, emailUsuario, false, precioArticuloF);
                     Toast articuloAniadido = Toast.makeText(getActivity().getApplicationContext(), "Artículo añadido correctamente", Toast.LENGTH_SHORT);
                     articuloAniadido.show();
+                    
                 }
             }
         });
@@ -151,4 +176,5 @@ public class FragmentoAniadirArticulo extends Fragment {
         Articulos articulo = new Articulos(titulo, foto, propietario, estado, precio);
         refArticulos.child(artId).setValue(articulo);
     }
+
 }
