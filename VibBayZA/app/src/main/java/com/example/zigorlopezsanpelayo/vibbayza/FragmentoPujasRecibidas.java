@@ -56,7 +56,6 @@ public class FragmentoPujasRecibidas extends Fragment {
                     String nombreArticuloPujado = (String) snapshot.child("titulo").getValue();
                     String cantidad = (String) snapshot.child("cantidad").getValue();
                     final String titulo = getArguments().getString("titulo");
-                    Log.i("String", titulo);
 
                     if (nombreArticuloPujado.equals(titulo)) {
                         pujaEncontrada = new TextView(getActivity().getApplicationContext());
@@ -78,23 +77,8 @@ public class FragmentoPujasRecibidas extends Fragment {
                                         for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                             String titArt = (String) snapshot.child("titulo").getValue();
                                             if (titArt.equals(titulo)) {
-                                                snapshot.getRef().removeValue();
-                                            }
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-                                refPujas.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                            String titArt = (String) snapshot.child("titulo").getValue();
-                                            if (titArt.equals(titulo)) {
-                                                snapshot.getRef().removeValue();
+                                                Articulos articuloActualizado = new Articulos(snapshot.child("titulo").getValue().toString(), snapshot.child("nombreImagen").getValue().toString(), snapshot.child("email").getValue().toString(), true, Float.parseFloat(snapshot.child("precio").getValue().toString()));
+                                                refArticulos.child(snapshot.getKey()).setValue(articuloActualizado);
                                             }
                                         }
                                     }
