@@ -42,6 +42,8 @@ public class FragmentoBuscar extends Fragment {
     protected LinearLayout arts;
     protected ImageView imagenArticulo;
     protected Button botonPujar;
+    protected long numArts = 1;
+    protected String numArtsS = "1";
 
     DatabaseReference refArticulos =
             FirebaseDatabase.getInstance().getReference()
@@ -77,100 +79,120 @@ public class FragmentoBuscar extends Fragment {
                 arts.removeAllViews();
                 buscarFormS = buscarForm.getText().toString().toLowerCase();
 
+                refArticulos.getParent().addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snap: dataSnapshot.getChildren()) {
+                            if (snap.getKey().equals("pujas")) {
+                                numArts = snap.getChildrenCount() + 1;
+                                numArtsS = Long.toString(numArts);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
                 refArticulos.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            String titulo = (String) snapshot.child("titulo").getValue();
-                            final long precio = (long) snapshot.child("precio").getValue();
-                            final String propietario = (String) snapshot.child("email").getValue();
+                            if (snapshot.child("estado").equals(false)) {
+                                String titulo = (String) snapshot.child("titulo").getValue();
+                                final long precio = (long) snapshot.child("precio").getValue();
+                                final String propietario = (String) snapshot.child("email").getValue();
 
-                            char[] tituloChar = titulo.toLowerCase().toCharArray();
-                            String tituloParcial = "";
-                            for (int j=0; j<tituloChar.length; j++) {
-                                tituloParcial = tituloParcial + tituloChar[j];
-                                if (buscarFormS.equals(tituloParcial)) {
-                                    String imagenB64 = (String) snapshot.child("nombreImagen").getValue();
-                                    byte[] imagenByte = Base64.decode(imagenB64, Base64.DEFAULT);
-                                    Bitmap imagen = BitmapFactory.decodeByteArray(imagenByte , 0, imagenByte.length);
-                                    imagenArticulo = new ImageView(getActivity().getApplicationContext());
-                                    imagenArticulo.setImageBitmap(imagen);
-                                    encontrado = true;
-                                    articuloEncontrado = new TextView(getActivity().getApplicationContext());
-                                    articuloEncontrado.setText(titulo + "  " + precio + "€");
-                                    articuloEncontrado.setTextSize(20);
-                                    articuloEncontrado.setTextColor(Color.parseColor("#000000"));
-                                    LinearLayout art = new LinearLayout(getActivity().getApplicationContext());
-                                    botonPujar = new Button(getActivity().getApplicationContext());
-                                    botonPujar.setText("Pujar");
-                                    botonPujar.setBackgroundColor(Color.parseColor("#F8BBD0"));
-                                    botonPujar.setPadding(10, 10, 10, 10);
-                                    botonPujar.setTag(titulo);
-                                    botonPujar.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
-                                            alertDialog.setTitle("Puja");
-                                            alertDialog.setMessage("Introduce tu puja");
+                                char[] tituloChar = titulo.toLowerCase().toCharArray();
+                                String tituloParcial = "";
+                                for (int j=0; j<tituloChar.length; j++) {
+                                    tituloParcial = tituloParcial + tituloChar[j];
+                                    if (buscarFormS.equals(tituloParcial)) {
+                                        String imagenB64 = (String) snapshot.child("nombreImagen").getValue();
+                                        byte[] imagenByte = Base64.decode(imagenB64, Base64.DEFAULT);
+                                        Bitmap imagen = BitmapFactory.decodeByteArray(imagenByte , 0, imagenByte.length);
+                                        imagenArticulo = new ImageView(getActivity().getApplicationContext());
+                                        imagenArticulo.setImageBitmap(imagen);
+                                        encontrado = true;
+                                        articuloEncontrado = new TextView(getActivity().getApplicationContext());
+                                        articuloEncontrado.setText(titulo + "  " + precio + "€");
+                                        articuloEncontrado.setTextSize(20);
+                                        articuloEncontrado.setTextColor(Color.parseColor("#000000"));
+                                        LinearLayout art = new LinearLayout(getActivity().getApplicationContext());
+                                        botonPujar = new Button(getActivity().getApplicationContext());
+                                        botonPujar.setText("Pujar");
+                                        botonPujar.setBackgroundColor(Color.parseColor("#F8BBD0"));
+                                        botonPujar.setPadding(10, 10, 10, 10);
+                                        botonPujar.setTag(titulo);
+                                        botonPujar.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+                                                alertDialog.setTitle("Puja");
+                                                alertDialog.setMessage("Introduce tu puja");
 
-                                            final EditText cantidadPuja = new EditText(getContext());
-                                            cantidadPuja.setInputType(InputType.TYPE_CLASS_NUMBER);
-                                            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                                    LinearLayout.LayoutParams.MATCH_PARENT);
-                                            cantidadPuja.setLayoutParams(lp);
-                                            alertDialog.setView(cantidadPuja);
+                                                final EditText cantidadPuja = new EditText(getContext());
+                                                cantidadPuja.setInputType(InputType.TYPE_CLASS_NUMBER);
+                                                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                                        LinearLayout.LayoutParams.MATCH_PARENT);
+                                                cantidadPuja.setLayoutParams(lp);
+                                                alertDialog.setView(cantidadPuja);
 
-                                            alertDialog.setPositiveButton("Pujar",
-                                                    new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int which) {
-                                                            String puja = cantidadPuja.getText().toString();
-                                                            String nombreUsuario = ((ProfileActivity)getActivity()).getNombreUsuario();
-                                                            String nombreArticulo = botonPujar.getTag().toString();
-                                                            if (nombreUsuario.equals(propietario)) {
-                                                                Toast articuloPropio = Toast.makeText(getActivity().getApplicationContext(), "No puedes pujar por tus propios artículos", Toast.LENGTH_SHORT);
-                                                                articuloPropio.show();
+                                                alertDialog.setPositiveButton("Pujar",
+                                                        new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                String puja = cantidadPuja.getText().toString();
+                                                                String nombreUsuario = ((ProfileActivity)getActivity()).getNombreUsuario();
+                                                                String nombreArticulo = botonPujar.getTag().toString();
+                                                                if (nombreUsuario.equals(propietario)) {
+                                                                    Toast articuloPropio = Toast.makeText(getActivity().getApplicationContext(), "No puedes pujar por tus propios artículos", Toast.LENGTH_SHORT);
+                                                                    articuloPropio.show();
+                                                                }
+                                                                else if (puja.equals("")) {
+                                                                    Toast pujaVacia = Toast.makeText(getActivity().getApplicationContext(), "Debes introducir una cantidad", Toast.LENGTH_SHORT);
+                                                                    pujaVacia.show();
+                                                                }
+                                                                else if (!(Float.parseFloat(puja) < precio)) {
+                                                                    aniadirPuja(numArtsS, nombreUsuario, puja, nombreArticulo);
+                                                                    Toast pujaExitosa = Toast.makeText(getActivity().getApplicationContext(), "Puja realizada correctamente", Toast.LENGTH_SHORT);
+                                                                    pujaExitosa.show();
+                                                                }
+                                                                else {
+                                                                    Toast pujaMinima = Toast.makeText(getActivity().getApplicationContext(), "la puja mínima es de " + precio + " €", Toast.LENGTH_SHORT);
+                                                                    pujaMinima.show();
+                                                                }
                                                             }
-                                                            else if (puja.equals("")) {
-                                                                Toast pujaVacia = Toast.makeText(getActivity().getApplicationContext(), "Debes introducir una cantidad", Toast.LENGTH_SHORT);
-                                                                pujaVacia.show();
+                                                        });
+
+                                                alertDialog.setNegativeButton("Cancelar",
+                                                        new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                dialog.cancel();
                                                             }
-                                                            else if (!(Float.parseFloat(puja) < precio)) {
-                                                                aniadirPuja("2", nombreUsuario, puja, nombreArticulo);
-                                                                Toast pujaExitosa = Toast.makeText(getActivity().getApplicationContext(), "Puja realizada correctamente", Toast.LENGTH_SHORT);
-                                                                pujaExitosa.show();
-                                                            }
-                                                            else {
-                                                                Toast pujaMinima = Toast.makeText(getActivity().getApplicationContext(), "la puja mínima es de " + precio + " €", Toast.LENGTH_SHORT);
-                                                                pujaMinima.show();
-                                                            }
-                                                        }
-                                                    });
+                                                        });
 
-                                            alertDialog.setNegativeButton("Cancelar",
-                                                    new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int which) {
-                                                            dialog.cancel();
-                                                        }
-                                                    });
+                                                alertDialog.show();
 
-                                            alertDialog.show();
+                                            }
+                                        });
+                                        art.setOrientation(LinearLayout.VERTICAL);
+                                        art.setGravity(Gravity.CENTER_HORIZONTAL);
+                                        art.setBackgroundColor(Color.parseColor("#E3F2FD"));
+                                        art.addView(articuloEncontrado);
+                                        art.addView(imagenArticulo);
+                                        art.addView(botonPujar);
+                                        imagenArticulo.getLayoutParams().height = 350;
+                                        imagenArticulo.getLayoutParams().width = 500;
+                                        imagenArticulo.setImageBitmap(imagen);
+                                        arts.addView(art);
 
-                                        }
-                                    });
-                                    art.setOrientation(LinearLayout.VERTICAL);
-                                    art.setGravity(Gravity.CENTER_HORIZONTAL);
-                                    art.setBackgroundColor(Color.parseColor("#E3F2FD"));
-                                    art.addView(articuloEncontrado);
-                                    art.addView(imagenArticulo);
-                                    art.addView(botonPujar);
-                                    imagenArticulo.getLayoutParams().height = 350;
-                                    imagenArticulo.getLayoutParams().width = 500;
-                                    imagenArticulo.setImageBitmap(imagen);
-                                    arts.addView(art);
-
+                                    }
                                 }
                             }
+
                         }
                         if (!encontrado) {
                             Toast articuloNoEncontrado = Toast.makeText(getActivity().getApplicationContext(), "No hay coincidencias", Toast.LENGTH_SHORT);
