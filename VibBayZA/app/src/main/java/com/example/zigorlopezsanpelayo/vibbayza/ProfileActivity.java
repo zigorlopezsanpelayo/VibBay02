@@ -90,7 +90,7 @@ public class ProfileActivity extends AppCompatActivity
                                 getSupportFragmentManager().beginTransaction()
                                         .replace(R.id.content_main, fragmentoArticulos)
                                         .commit();
-                                getSupportActionBar().setTitle("Artícluos");
+                                getSupportActionBar().setTitle("Artículos");
                                 break;
                             case R.id.pujas:
                                 Fragment fragmentoPujas = new FragmentoPujas();
