@@ -11,9 +11,9 @@ public class Articulos {
     private String nombreImagen;
     private String email;
     private boolean estado;
-    private float precio;
+    private double precio;
 
-    public Articulos(String titulo, String nombreImagen, String email, boolean estado, float precio) {
+    public Articulos(String titulo, String nombreImagen, String email, boolean estado, double precio) {
         this.titulo = titulo;
         this.nombreImagen = nombreImagen;
         this.email = email;
@@ -38,7 +38,7 @@ public class Articulos {
         return estado;
     }
 
-    public float getPrecio() {
+    public double getPrecio() {
         return precio;
     }
 
