@@ -30,6 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.ByteArrayOutputStream;
+import java.io.StringReader;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -40,7 +41,7 @@ public class FragmentoAniadirArticulo extends Fragment {
     protected EditText precioArticulo;
     protected String nombreArticuloS;
     protected String precioArticuloS;
-    protected float precioArticuloF;
+    protected double precioArticuloD;
     private static final int RESULT_LOAD_IMAGE = 1;
     protected ImageView imagenASubir;
     protected String imagenB64 = "";
@@ -114,9 +115,9 @@ public class FragmentoAniadirArticulo extends Fragment {
                 }
                 else {
                     nombreArticuloS = nombreArticulo.getText().toString();
-                    precioArticuloF = Float.parseFloat(precioArticulo.getText().toString());
+                    precioArticuloD = Double.parseDouble(precioArticulo.getText().toString());
 
-                    aniadirArticulo(numArtsS, nombreArticuloS, imagenB64, emailUsuario, false, precioArticuloF);
+                    aniadirArticulo(numArtsS, nombreArticuloS, imagenB64, emailUsuario, false, precioArticuloD);
                     Toast articuloAniadido = Toast.makeText(getActivity().getApplicationContext(), "Artículo añadido correctamente", Toast.LENGTH_SHORT);
                     articuloAniadido.show();
                     
@@ -127,6 +128,10 @@ public class FragmentoAniadirArticulo extends Fragment {
 
     private boolean checkPermission(){
         int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        Log.i("String", String.valueOf(permissionCheck));
+        Log.i("String", String.valueOf(PackageManager.PERMISSION_GRANTED));
+
 
         if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
@@ -172,7 +177,7 @@ public class FragmentoAniadirArticulo extends Fragment {
         return bitmapReescaclado;
     }
 
-    private void aniadirArticulo(String artId, String titulo, String foto, String propietario, boolean estado, float precio) {
+    private void aniadirArticulo(String artId, String titulo, String foto, String propietario, boolean estado, double precio) {
         Articulos articulo = new Articulos(titulo, foto, propietario, estado, precio);
         refArticulos.child(artId).setValue(articulo);
     }

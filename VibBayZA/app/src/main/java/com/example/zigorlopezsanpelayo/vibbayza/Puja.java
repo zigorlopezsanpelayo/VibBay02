@@ -7,14 +7,14 @@ package com.example.zigorlopezsanpelayo.vibbayza;
 public class Puja {
 
     private String email;
-    private String cantidad;
+    private double cantidad;
     private String titulo;
 
     public Puja() {
 
     }
 
-    public Puja(String email, String cantidad, String titulo) {
+    public Puja(String email, double cantidad, String titulo) {
         this.email = email;
         this.cantidad = cantidad;
         this. titulo = titulo;
@@ -28,11 +28,11 @@ public class Puja {
         this.email = email;
     }
 
-    public String getCantidad() {
+    public double getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(String cantidad) {
+    public void setCantidad(double cantidad) {
         this.cantidad = cantidad;
     }
 
