@@ -25,10 +25,12 @@ import static android.view.Gravity.LEFT;
 public class FragmentoPujasRecibidas extends Fragment {
 
     protected TextView pujaEncontrada;
+    protected TextView noHayPujas;
     protected Button botonCerrarPuja;
     protected LinearLayout pujas;
     protected LinearLayout puja;
     protected String titulo;
+    protected boolean hayPujas;
 
     DatabaseReference refPujas =
             FirebaseDatabase.getInstance().getReference()
@@ -56,54 +58,69 @@ public class FragmentoPujasRecibidas extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String nombreArticuloPujado = (String) snapshot.child("titulo").getValue();
-                    double cantidad = (double) snapshot.child("cantidad").getValue();
-                    titulo = getArguments().getString("titulo");
+                    pujas = (LinearLayout) getView().findViewById(R.id.pujas_encontradas);
+                    puja = new LinearLayout(getActivity().getApplicationContext());
+                    if (snapshot.getChildrenCount() == 0) {
+                        hayPujas = false;
+                    }
+                    else {
+                        String nombreArticuloPujado = (String) snapshot.child("titulo").getValue();
+                        String nombrePujador = (String) snapshot.child("email").getValue();
+                        double cantidad = Double.parseDouble(snapshot.child("cantidad").getValue().toString());
+                        titulo = getArguments().getString("titulo");
 
-                    if (nombreArticuloPujado.equals(titulo)) {
-                        pujaEncontrada = new TextView(getActivity().getApplicationContext());
-                        pujaEncontrada.setText("" + cantidad + "€");
-                        pujaEncontrada.setBackgroundColor(Color.WHITE);
-                        pujaEncontrada.setTextColor(Color.BLACK);
-                        pujaEncontrada.setTextSize(30);
+                        if (nombreArticuloPujado.equals(titulo)) {
+                            hayPujas = true;
+                            pujaEncontrada = new TextView(getActivity().getApplicationContext());
+                            pujaEncontrada.setText("CANTIDAD:  " + cantidad + "€\n" + "PUJADOR:    " + nombrePujador);
+                            pujaEncontrada.setBackgroundColor(Color.WHITE);
+                            pujaEncontrada.setTextColor(Color.BLACK);
+                            pujaEncontrada.setTextSize(30);
 
-                        pujas = (LinearLayout) getView().findViewById(R.id.pujas_encontradas);
-                        puja = new LinearLayout(getActivity().getApplicationContext());
-
-                        puja.setOrientation(LinearLayout.HORIZONTAL);
-                        puja.setBackgroundColor(Color.parseColor("#E3F2FD"));
-                        puja.addView(pujaEncontrada);
+                            puja.setOrientation(LinearLayout.VERTICAL);
+                            puja.setBackgroundColor(Color.parseColor("#E3F2FD"));
+                            puja.addView(pujaEncontrada);
+                        }
                     }
                 }
-                botonCerrarPuja = new Button(getActivity().getApplicationContext());
-                botonCerrarPuja.setText("Cerrar puja");
-                botonCerrarPuja.setBackgroundColor(Color.parseColor("#F8BBD0"));
-                botonCerrarPuja.setPadding(10, 10, 10, 10);
-                botonCerrarPuja.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        refPujas.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    String titArt = (String) snapshot.child("titulo").getValue();
-                                    if (titArt.equals(titulo)) {
-
-                                        Articulos articuloActualizado = new Articulos(snapshot.child("titulo").getValue().toString(), snapshot.child("nombreImagen").getValue().toString(), snapshot.child("email").getValue().toString(), true, Float.parseFloat(snapshot.child("precio").getValue().toString()));
-                                        refArticulos.child(snapshot.getKey()).setValue(articuloActualizado);
+                if (!hayPujas) {
+                    noHayPujas = new TextView(getActivity().getApplicationContext());
+                    noHayPujas.setText("NADIE HA PUJADO POR ESTE ARTÍCULO TODAVÍA");
+                    noHayPujas.setBackgroundColor(Color.WHITE);
+                    noHayPujas.setTextColor(Color.GRAY);
+                    noHayPujas.setTextSize(10);
+                    pujas.addView(noHayPujas);
+                }
+                else {
+                    botonCerrarPuja = new Button(getActivity().getApplicationContext());
+                    botonCerrarPuja.setText("Cerrar puja");
+                    botonCerrarPuja.setBackgroundColor(Color.parseColor("#F8BBD0"));
+                    botonCerrarPuja.setPadding(10, 10, 10, 10);
+                    botonCerrarPuja.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            refPujas.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        String titArt = (String) snapshot.child("titulo").getValue();
+                                        if (titArt.equals(titulo)) {
+                                            Articulos articuloActualizado = new Articulos(snapshot.child("titulo").getValue().toString(), snapshot.child("nombreImagen").getValue().toString(), snapshot.child("email").getValue().toString(), true, Float.parseFloat(snapshot.child("precio").getValue().toString()));
+                                            refArticulos.child(snapshot.getKey()).setValue(articuloActualizado);
+                                        }
                                     }
                                 }
-                            }
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
 
-                            }
-                        });
-                    }
-                });
-                puja.addView(botonCerrarPuja);
-                pujas.addView(puja);
+                                }
+                            });
+                        }
+                    });
+                    puja.addView(botonCerrarPuja);
+                    pujas.addView(puja);
+                }
             }
 
             @Override

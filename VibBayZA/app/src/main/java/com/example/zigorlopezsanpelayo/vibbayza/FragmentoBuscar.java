@@ -134,8 +134,8 @@ public class FragmentoBuscar extends Fragment {
                                                     @Override
                                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                                         for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                                                            if(((double) snapshot.child("cantidad").getValue()) > pujaMaxima) {
-                                                                pujaMaxima = (double) snapshot.child("cantidad").getValue();
+                                                            if((Double.parseDouble(snapshot.child("cantidad").getValue().toString()) ) > pujaMaxima) {
+                                                                pujaMaxima = Double.parseDouble(snapshot.child("cantidad").getValue().toString());
                                                             }
 
                                                         }
@@ -161,6 +161,12 @@ public class FragmentoBuscar extends Fragment {
                                                 alertDialog.setPositiveButton("Pujar",
                                                         new DialogInterface.OnClickListener() {
                                                             public void onClick(DialogInterface dialog, int which) {
+                                                                try {
+                                                                    Double.parseDouble(cantidadPuja.getText().toString());
+                                                                }
+                                                                catch (Exception e){
+
+                                                                }
                                                                 double puja = Double.parseDouble(cantidadPuja.getText().toString());
                                                                 String nombreUsuario = ((ProfileActivity)getActivity()).getNombreUsuario();
                                                                 String nombreArticulo = botonPujar.getTag().toString();
@@ -177,8 +183,8 @@ public class FragmentoBuscar extends Fragment {
                                                                     Toast pujaExitosa = Toast.makeText(getActivity().getApplicationContext(), "Puja realizada correctamente", Toast.LENGTH_SHORT);
                                                                     pujaExitosa.show();
                                                                 }
-                                                                else if ((!(puja < pujaMaxima)) && ((puja != 0))) {
-                                                                    Toast pujaMinima = Toast.makeText(getActivity().getApplicationContext(), "la puja mínima debe ser mayor que " + pujaMaxima + " €", Toast.LENGTH_SHORT);
+                                                                else if (((puja < pujaMaxima)) && ((puja != 0))) {
+                                                                    Toast pujaMinima = Toast.makeText(getActivity().getApplicationContext(), "la puja debe ser mayor que " + pujaMaxima + " €", Toast.LENGTH_SHORT);
                                                                     pujaMinima.show();
                                                                 }
                                                                 else {

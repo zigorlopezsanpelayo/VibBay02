@@ -72,7 +72,7 @@ public class FragmentoArticulos extends Fragment {
                     String propietario = (String) snapshot.child("email").getValue();
                     if (propietario.equals(emailUsuario)) {
                         final String titulo = (String) snapshot.child("titulo").getValue();
-                        double precio = (double) snapshot.child("precio").getValue();
+                        double precio = Double.parseDouble(snapshot.child("precio").getValue().toString());
 
                         String imagenB64 = (String) snapshot.child("nombreImagen").getValue();
                         byte[] imagenByte = Base64.decode(imagenB64, Base64.DEFAULT);
