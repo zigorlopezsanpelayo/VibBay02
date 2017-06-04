@@ -12,13 +12,15 @@ public class Articulos {
     private String email;
     private boolean estado;
     private double precio;
+    private double pujaMaxima;
 
-    public Articulos(String titulo, String nombreImagen, String email, boolean estado, double precio) {
+    public Articulos(String titulo, String nombreImagen, String email, boolean estado, double precio, double pujaMaxima) {
         this.titulo = titulo;
         this.nombreImagen = nombreImagen;
         this.email = email;
         this.estado = estado;
         this.precio = precio;
+        this.pujaMaxima = pujaMaxima;
     }
 
 
@@ -42,6 +44,10 @@ public class Articulos {
         return precio;
     }
 
+    public double getPujaMaxima() {
+        return pujaMaxima;
+    }
+
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
@@ -60,5 +66,9 @@ public class Articulos {
 
     public void setPrecio(float precio) {
         this.precio = precio;
+    }
+
+    public void setPujaMaxima(float pujaMaxima) {
+        this.pujaMaxima = pujaMaxima;
     }
 }

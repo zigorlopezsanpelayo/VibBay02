@@ -2,6 +2,7 @@ package com.example.zigorlopezsanpelayo.vibbayza;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -41,10 +42,10 @@ public class FragmentoBuscar extends Fragment {
     protected TextView articuloEncontrado;
     protected LinearLayout arts;
     protected ImageView imagenArticulo;
+    protected double pujaMaxima;
     protected Button botonPujar;
-    protected long numArts = 1;
-    protected String numArtsS = "1";
-    protected double pujaMaxima = 0;
+    protected long numPujas = 1;
+    protected String numPujasS = "1";
 
     DatabaseReference refArticulos =
             FirebaseDatabase.getInstance().getReference()
@@ -80,13 +81,13 @@ public class FragmentoBuscar extends Fragment {
                 arts.removeAllViews();
                 buscarFormS = buscarForm.getText().toString().toLowerCase();
 
-                refArticulos.getParent().addListenerForSingleValueEvent(new ValueEventListener() {
+                refPujas.getParent().addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot snap: dataSnapshot.getChildren()) {
                             if (snap.getKey().equals("pujas")) {
-                                numArts = snap.getChildrenCount() + 1;
-                                numArtsS = Long.toString(numArts);
+                                numPujas = snap.getChildrenCount() + 1;
+                                numPujasS = Long.toString(numPujas);
                             }
                         }
                     }
@@ -102,9 +103,11 @@ public class FragmentoBuscar extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             if (snapshot.child("estado").getValue().toString().equals("false")) {
-                                String titulo = (String) snapshot.child("titulo").getValue();
+                                final String titulo = (String) snapshot.child("titulo").getValue();
                                 final double precio = (double) snapshot.child("precio").getValue();
                                 final String propietario = (String) snapshot.child("email").getValue();
+                                final String nombreImagen = (String) snapshot.child("nombreImagen").getValue();
+                                pujaMaxima = (double) snapshot.child("pujaMaxima").getValue();
 
                                 char[] tituloChar = titulo.toLowerCase().toCharArray();
                                 String tituloParcial = "";
@@ -130,79 +133,89 @@ public class FragmentoBuscar extends Fragment {
                                         botonPujar.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                refPujas.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                                        for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                                                            if((Double.parseDouble(snapshot.child("cantidad").getValue().toString()) ) > pujaMaxima) {
-                                                                pujaMaxima = Double.parseDouble(snapshot.child("cantidad").getValue().toString());
+                                                if (FragmentoLogin.getLogeado()) {
+                                                    refPujas.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                                            for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                                                                if (snapshot.child("titulo").getValue().toString().equals(titulo)) {
+                                                                    if ((Double.parseDouble(snapshot.child("cantidad").getValue().toString()) ) > pujaMaxima) {
+                                                                        pujaMaxima = Double.parseDouble(snapshot.child("cantidad").getValue().toString());
+                                                                        Articulos articuloActualizado = new Articulos(titulo, nombreImagen, propietario, true, precio, pujaMaxima);
+                                                                        refArticulos.child(snapshot.getKey()).setValue(articuloActualizado);
+                                                                    }
+                                                                }
+
                                                             }
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(DatabaseError databaseError) {
 
                                                         }
-                                                    }
+                                                    });
+                                                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+                                                    alertDialog.setTitle("Puja");
+                                                    alertDialog.setMessage("Introduce tu puja");
 
-                                                    @Override
-                                                    public void onCancelled(DatabaseError databaseError) {
+                                                    final EditText cantidadPuja = new EditText(getContext());
+                                                    cantidadPuja.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                                                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                                                            LinearLayout.LayoutParams.MATCH_PARENT,
+                                                            LinearLayout.LayoutParams.MATCH_PARENT);
+                                                    cantidadPuja.setLayoutParams(lp);
+                                                    alertDialog.setView(cantidadPuja);
 
-                                                    }
-                                                });
-                                                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
-                                                alertDialog.setTitle("Puja");
-                                                alertDialog.setMessage("Introduce tu puja");
+                                                    alertDialog.setPositiveButton("Pujar",
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                    try {
+                                                                        Double.parseDouble(cantidadPuja.getText().toString());
+                                                                    }
+                                                                    catch (Exception e){
 
-                                                final EditText cantidadPuja = new EditText(getContext());
-                                                cantidadPuja.setInputType(InputType.TYPE_CLASS_NUMBER);
-                                                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                                        LinearLayout.LayoutParams.MATCH_PARENT);
-                                                cantidadPuja.setLayoutParams(lp);
-                                                alertDialog.setView(cantidadPuja);
-
-                                                alertDialog.setPositiveButton("Pujar",
-                                                        new DialogInterface.OnClickListener() {
-                                                            public void onClick(DialogInterface dialog, int which) {
-                                                                try {
-                                                                    Double.parseDouble(cantidadPuja.getText().toString());
+                                                                    }
+                                                                    double puja = Double.parseDouble(cantidadPuja.getText().toString());
+                                                                    String nombreUsuario = ((ProfileActivity)getActivity()).getNombreUsuario();
+                                                                    if (nombreUsuario.equals(propietario)) {
+                                                                        Toast articuloPropio = Toast.makeText(getActivity().getApplicationContext(), "No puedes pujar por tus propios artículos", Toast.LENGTH_SHORT);
+                                                                        articuloPropio.show();
+                                                                    }
+                                                                    else if (String.valueOf(puja).equals("")) {
+                                                                        Toast pujaVacia = Toast.makeText(getActivity().getApplicationContext(), "Debes introducir una cantidad", Toast.LENGTH_SHORT);
+                                                                        pujaVacia.show();
+                                                                    }
+                                                                    else if (!(puja < precio) && (puja > pujaMaxima)) {
+                                                                        aniadirPuja(numPujasS, nombreUsuario, puja, titulo);
+                                                                        Toast pujaExitosa = Toast.makeText(getActivity().getApplicationContext(), "Puja realizada correctamente", Toast.LENGTH_SHORT);
+                                                                        pujaExitosa.show();
+                                                                    }
+                                                                    else if (((puja < pujaMaxima)) && ((puja != 0))) {
+                                                                        Toast pujaMinima = Toast.makeText(getActivity().getApplicationContext(), "la puja debe ser mayor que " + pujaMaxima + " €", Toast.LENGTH_SHORT);
+                                                                        pujaMinima.show();
+                                                                    }
+                                                                    else {
+                                                                        Toast pujaMinima = Toast.makeText(getActivity().getApplicationContext(), "la puja mínima es de " + precio + " €", Toast.LENGTH_SHORT);
+                                                                        pujaMinima.show();
+                                                                    }
                                                                 }
-                                                                catch (Exception e){
+                                                            });
 
+                                                    alertDialog.setNegativeButton("Cancelar",
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                    dialog.cancel();
                                                                 }
-                                                                double puja = Double.parseDouble(cantidadPuja.getText().toString());
-                                                                String nombreUsuario = ((ProfileActivity)getActivity()).getNombreUsuario();
-                                                                String nombreArticulo = botonPujar.getTag().toString();
-                                                                if (nombreUsuario.equals(propietario)) {
-                                                                    Toast articuloPropio = Toast.makeText(getActivity().getApplicationContext(), "No puedes pujar por tus propios artículos", Toast.LENGTH_SHORT);
-                                                                    articuloPropio.show();
-                                                                }
-                                                                else if (String.valueOf(puja).equals("")) {
-                                                                    Toast pujaVacia = Toast.makeText(getActivity().getApplicationContext(), "Debes introducir una cantidad", Toast.LENGTH_SHORT);
-                                                                    pujaVacia.show();
-                                                                }
-                                                                else if (!(puja < precio) && (puja > pujaMaxima)) {
-                                                                    aniadirPuja(numArtsS, nombreUsuario, puja, nombreArticulo);
-                                                                    Toast pujaExitosa = Toast.makeText(getActivity().getApplicationContext(), "Puja realizada correctamente", Toast.LENGTH_SHORT);
-                                                                    pujaExitosa.show();
-                                                                }
-                                                                else if (((puja < pujaMaxima)) && ((puja != 0))) {
-                                                                    Toast pujaMinima = Toast.makeText(getActivity().getApplicationContext(), "la puja debe ser mayor que " + pujaMaxima + " €", Toast.LENGTH_SHORT);
-                                                                    pujaMinima.show();
-                                                                }
-                                                                else {
-                                                                    Toast pujaMinima = Toast.makeText(getActivity().getApplicationContext(), "la puja mínima es de " + precio + " €", Toast.LENGTH_SHORT);
-                                                                    pujaMinima.show();
-                                                                }
-                                                            }
-                                                        });
+                                                            });
 
-                                                alertDialog.setNegativeButton("Cancelar",
-                                                        new DialogInterface.OnClickListener() {
-                                                            public void onClick(DialogInterface dialog, int which) {
-                                                                dialog.cancel();
-                                                            }
-                                                        });
+                                                    alertDialog.show();
+                                                }
+                                                else {
+                                                    Toast debesLogearte = Toast.makeText(getActivity().getApplicationContext(), "Debes logearte para poder pujar", Toast.LENGTH_SHORT);
+                                                    debesLogearte.show();
 
-                                                alertDialog.show();
-
+                                                    ((MainActivity)getActivity()).getSupportActionBar().setTitle("Login");
+                                                }
                                             }
                                         });
                                         art.setOrientation(LinearLayout.VERTICAL);

@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity
                 .replace(R.id.content_main, fragmentoPrincipal)
                 .commit();
 
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 

@@ -84,6 +84,7 @@ public class ProfileActivity extends AppCompatActivity
                             case R.id.logout:
                                 Intent main = new Intent(getApplicationContext(), MainActivity.class);
                                 startActivity(main);
+                                FragmentoLogin.setLogeado(false);
                                 break;
                             case R.id.articulos:
                                 Fragment fragmentoArticulos = new FragmentoArticulos();

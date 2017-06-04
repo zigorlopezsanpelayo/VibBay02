@@ -174,7 +174,7 @@ public class FragmentoAniadirArticulo extends Fragment {
     }
 
     private void aniadirArticulo(String artId, String titulo, String foto, String propietario, boolean estado, double precio) {
-        Articulos articulo = new Articulos(titulo, foto, propietario, estado, precio);
+        Articulos articulo = new Articulos(titulo, foto, propietario, estado, precio, 0.99);
         refArticulos.child(artId).setValue(articulo);
     }
 
