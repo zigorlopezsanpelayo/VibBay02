@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
 import android.util.Log;
@@ -32,6 +33,7 @@ public class FragmentoPujas extends Fragment {
     protected double precioInicial;
     protected ImageView imagenArticulo;
     protected double pujaMasAlta = 0;
+    protected String imagenB64;
 
     DatabaseReference refArticulos =
             FirebaseDatabase.getInstance().getReference()
@@ -59,7 +61,7 @@ public class FragmentoPujas extends Fragment {
         refPujas.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     final String nombreArticuloPujado = (String) snapshot.child("titulo").getValue();
                     double cantidad = Double.parseDouble(snapshot.child("cantidad").getValue().toString());
                     String pujador = (String) snapshot.child("email").getValue();
@@ -68,9 +70,10 @@ public class FragmentoPujas extends Fragment {
                         refArticulos.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for (final DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                                    if (nombreArticuloPujado.equals(snapshot.child("titulo").getValue())) {
+                                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                                    if (nombreArticuloPujado.equals(snapshot.child("titulo").getValue().toString())) {
                                         precioInicial = (double) snapshot.child("precio").getValue();
+                                        imagenB64 = (String) snapshot.child("nombreImagen").getValue();
                                     }
                                 }
                             }
@@ -82,8 +85,8 @@ public class FragmentoPujas extends Fragment {
                         });
                         refPujas.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                for (final DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                            public void onDataChange(DataSnapshot dataSnapshot2) {
+                                for (DataSnapshot snapshot: dataSnapshot2.getChildren()) {
                                     double cantidad = (double) snapshot.child("cantidad").getValue();
                                     if (cantidad > pujaMasAlta) {
                                         pujaMasAlta = cantidad;
@@ -101,7 +104,6 @@ public class FragmentoPujas extends Fragment {
                         pujaEncontrada.setBackgroundColor(Color.WHITE);
                         pujaEncontrada.setTextColor(Color.BLACK);
                         pujaEncontrada.setTextSize(30);
-                        String imagenB64 = (String) snapshot.child("nombreImagen").getValue();
                         byte[] imagenByte = Base64.decode(imagenB64, Base64.DEFAULT);
                         Bitmap imagen = BitmapFactory.decodeByteArray(imagenByte , 0, imagenByte.length);
                         imagenArticulo = new ImageView(getActivity().getApplicationContext());
