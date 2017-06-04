@@ -80,6 +80,7 @@ public class FragmentoPujasRecibidas extends Fragment {
                             puja.setOrientation(LinearLayout.VERTICAL);
                             puja.setBackgroundColor(Color.parseColor("#E3F2FD"));
                             puja.addView(pujaEncontrada);
+                            pujas.addView(puja);
                         }
                     }
                 }
@@ -99,13 +100,17 @@ public class FragmentoPujasRecibidas extends Fragment {
                     botonCerrarPuja.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            refPujas.addListenerForSingleValueEvent(new ValueEventListener() {
+                            refArticulos.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                         String titArt = (String) snapshot.child("titulo").getValue();
+                                        String nombreImagen = (String) snapshot.child("nombreImagen").getValue();
+                                        String email = (String) snapshot.child("email").getValue();
+                                        double precio = (double) snapshot.child("precio").getValue();
+                                        double pujaMaxima = (double) snapshot.child("pujaMaxima").getValue();
                                         if (titArt.equals(titulo)) {
-                                            Articulos articuloActualizado = new Articulos(snapshot.child("titulo").getValue().toString(), snapshot.child("nombreImagen").getValue().toString(), snapshot.child("email").getValue().toString(), true, Float.parseFloat(snapshot.child("precio").getValue().toString()));
+                                            Articulos articuloActualizado = new Articulos(titArt, nombreImagen, email, true, precio, pujaMaxima);
                                             refArticulos.child(snapshot.getKey()).setValue(articuloActualizado);
                                         }
                                     }
@@ -118,8 +123,7 @@ public class FragmentoPujasRecibidas extends Fragment {
                             });
                         }
                     });
-                    puja.addView(botonCerrarPuja);
-                    pujas.addView(puja);
+                    pujas.addView(botonCerrarPuja);
                 }
             }
 

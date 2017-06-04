@@ -24,7 +24,7 @@ public class FragmentoLogin extends Fragment {
     protected EditText passForm;
     protected String emailFormS;
     protected String passFormS;
-    protected boolean logeado;
+    protected static boolean logeado;
     protected String emailLogeado;
 
     DatabaseReference refUsuarios =
@@ -94,16 +94,16 @@ public class FragmentoLogin extends Fragment {
         return emailLogeado;
     }
 
-    public void setEmailLogeado(String emailLogeado) {
+    public  void setEmailLogeado(String emailLogeado) {
         this.emailLogeado = emailLogeado;
     }
 
-    public boolean getLogeado() {
+    public static boolean getLogeado() {
         return logeado;
     }
 
-    public void setLogeado(boolean logeado) {
-        this.logeado = logeado;
+    public static void setLogeado(boolean pLogeado) {
+        logeado = pLogeado;
     }
 }
 
