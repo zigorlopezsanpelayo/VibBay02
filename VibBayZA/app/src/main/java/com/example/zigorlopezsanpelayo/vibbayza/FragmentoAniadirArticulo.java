@@ -129,10 +129,6 @@ public class FragmentoAniadirArticulo extends Fragment {
     private boolean checkPermission(){
         int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE);
 
-        Log.i("String", String.valueOf(permissionCheck));
-        Log.i("String", String.valueOf(PackageManager.PERMISSION_GRANTED));
-
-
         if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                     getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, permissionCheck);
