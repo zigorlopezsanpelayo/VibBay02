@@ -31,8 +31,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
+import java.text.DecimalFormat;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.DOWNLOAD_SERVICE;
 
 public class FragmentoAniadirArticulo extends Fragment {
 
@@ -114,12 +116,30 @@ public class FragmentoAniadirArticulo extends Fragment {
                     campoVacio.show();
                 }
                 else {
+                    DecimalFormat decim = new DecimalFormat("0.00");
                     nombreArticuloS = nombreArticulo.getText().toString();
                     precioArticuloD = Double.parseDouble(precioArticulo.getText().toString());
+                    precioArticuloD = Double.parseDouble(decim.format(precioArticuloD));
 
                     aniadirArticulo(numArtsS, nombreArticuloS, imagenB64, emailUsuario, false, precioArticuloD);
                     Toast articuloAniadido = Toast.makeText(getActivity().getApplicationContext(), "Artículo añadido correctamente", Toast.LENGTH_SHORT);
                     articuloAniadido.show();
+
+                    boolean fragmentTransaction = false;
+
+                    FragmentoAniadirArticulo fragmentoAniadirArticulo = new FragmentoAniadirArticulo();
+                    fragmentTransaction = true;
+
+                    if(fragmentTransaction) {
+                        getFragmentManager().beginTransaction().addToBackStack("aniadirArticulo");
+                        Fragment fragmentPrevio = getFragmentManager().findFragmentByTag("aniadirArticulo");
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.content_main, fragmentoAniadirArticulo)
+                                .commit();
+
+                        ((ProfileActivity)getActivity()).getSupportActionBar().setTitle("Pujas");
+                        getFragmentManager().beginTransaction().remove(fragmentPrevio);
+                    }
                     
                 }
             }
@@ -176,6 +196,15 @@ public class FragmentoAniadirArticulo extends Fragment {
     private void aniadirArticulo(String artId, String titulo, String foto, String propietario, boolean estado, double precio) {
         Articulos articulo = new Articulos(titulo, foto, propietario, estado, precio, 0.99);
         refArticulos.child(artId).setValue(articulo);
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 
 }

@@ -35,6 +35,7 @@ import retrofit2.Response;
 public class FragmentoArticulos extends Fragment {
 
     protected TextView articuloEncontrado;
+    protected TextView articuloVendido;
     protected ImageView imagenArticulo;
     protected Button botonVerPujas;
 
@@ -72,7 +73,9 @@ public class FragmentoArticulos extends Fragment {
                     String propietario = (String) snapshot.child("email").getValue();
                     if (propietario.equals(emailUsuario)) {
                         final String titulo = (String) snapshot.child("titulo").getValue();
-                        double precio = Double.parseDouble(snapshot.child("precio").getValue().toString());
+                        double precio = ((Number)snapshot.child("precio").getValue()).doubleValue();
+                        boolean estado = (Boolean) snapshot.child("estado").getValue();
+                        double pujaMaxima = ((Number)snapshot.child("pujaMaxima").getValue()).doubleValue();
 
                         String imagenB64 = (String) snapshot.child("nombreImagen").getValue();
                         byte[] imagenByte = Base64.decode(imagenB64, Base64.DEFAULT);
@@ -106,7 +109,7 @@ public class FragmentoArticulos extends Fragment {
                                             .replace(R.id.content_main, fragmentoPujas)
                                             .commit();
 
-                                    ((ProfileActivity)getActivity()).getSupportActionBar().setTitle("Pujas");
+                                    ((ProfileActivity)getActivity()).getSupportActionBar().setTitle(FragmentoLogin.getEmailLogeado());
                                 }
 
                             }
@@ -116,7 +119,16 @@ public class FragmentoArticulos extends Fragment {
                         art.setBackgroundColor(Color.parseColor("#E3F2FD"));
                         art.addView(articuloEncontrado);
                         art.addView(imagenArticulo);
-                        art.addView(botonVerPujas);
+                        if (!estado) {
+                            art.addView(botonVerPujas);
+                        }
+                        else {
+                            articuloVendido = new TextView(getActivity().getApplicationContext());
+                            articuloVendido.setText("VENDIDO POR " + pujaMaxima + "€");
+                            articuloVendido.setTextSize(30);
+                            articuloVendido.setTextColor(Color.parseColor("#D50000"));
+                            art.addView(articuloVendido);
+                        }
                         imagenArticulo.getLayoutParams().height = 350;
                         imagenArticulo.getLayoutParams().width = 500;
                         imagenArticulo.setImageBitmap(imagen);

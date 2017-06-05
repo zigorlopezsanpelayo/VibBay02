@@ -32,20 +32,23 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
+
 
 public class FragmentoBuscar extends Fragment {
 
     protected Button botonBuscar;
     protected EditText buscarForm;
     protected String buscarFormS;
+    protected String titulo;
     protected boolean encontrado;
     protected TextView articuloEncontrado;
     protected LinearLayout arts;
     protected ImageView imagenArticulo;
     protected double pujaMaxima;
-    protected Button botonPujar;
     protected long numPujas = 1;
     protected String numPujasS = "1";
+    protected Button botonPujar;
 
     DatabaseReference refArticulos =
             FirebaseDatabase.getInstance().getReference()
@@ -103,17 +106,19 @@ public class FragmentoBuscar extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             if (snapshot.child("estado").getValue().toString().equals("false")) {
-                                final String titulo = (String) snapshot.child("titulo").getValue();
-                                final double precio = (double) snapshot.child("precio").getValue();
+                                titulo = (String) snapshot.child("titulo").getValue();
+                                final double precio = ((Number)snapshot.child("precio").getValue()).doubleValue();
                                 final String propietario = (String) snapshot.child("email").getValue();
                                 final String nombreImagen = (String) snapshot.child("nombreImagen").getValue();
                                 pujaMaxima = (double) snapshot.child("pujaMaxima").getValue();
+                                botonPujar = new Button();
 
                                 char[] tituloChar = titulo.toLowerCase().toCharArray();
                                 String tituloParcial = "";
                                 for (int j=0; j<tituloChar.length; j++) {
                                     tituloParcial = tituloParcial + tituloChar[j];
                                     if (buscarFormS.equals(tituloParcial)) {
+
                                         String imagenB64 = (String) snapshot.child("nombreImagen").getValue();
                                         byte[] imagenByte = Base64.decode(imagenB64, Base64.DEFAULT);
                                         Bitmap imagen = BitmapFactory.decodeByteArray(imagenByte , 0, imagenByte.length);
@@ -141,7 +146,7 @@ public class FragmentoBuscar extends Fragment {
                                                                 if (snapshot.child("titulo").getValue().toString().equals(titulo)) {
                                                                     if ((Double.parseDouble(snapshot.child("cantidad").getValue().toString()) ) > pujaMaxima) {
                                                                         pujaMaxima = Double.parseDouble(snapshot.child("cantidad").getValue().toString());
-                                                                        Articulos articuloActualizado = new Articulos(titulo, nombreImagen, propietario, true, precio, pujaMaxima);
+                                                                        Articulos articuloActualizado = new Articulos(titulo, nombreImagen, propietario, false, precio, pujaMaxima);
                                                                         refArticulos.child(snapshot.getKey()).setValue(articuloActualizado);
                                                                     }
                                                                 }
@@ -175,7 +180,9 @@ public class FragmentoBuscar extends Fragment {
                                                                     catch (Exception e){
 
                                                                     }
+                                                                    DecimalFormat decim = new DecimalFormat("0.00");
                                                                     double puja = Double.parseDouble(cantidadPuja.getText().toString());
+                                                                    puja = Double.parseDouble(decim.format(puja));
                                                                     String nombreUsuario = ((ProfileActivity)getActivity()).getNombreUsuario();
                                                                     if (nombreUsuario.equals(propietario)) {
                                                                         Toast articuloPropio = Toast.makeText(getActivity().getApplicationContext(), "No puedes pujar por tus propios artículos", Toast.LENGTH_SHORT);
@@ -189,6 +196,23 @@ public class FragmentoBuscar extends Fragment {
                                                                         aniadirPuja(numPujasS, nombreUsuario, puja, titulo);
                                                                         Toast pujaExitosa = Toast.makeText(getActivity().getApplicationContext(), "Puja realizada correctamente", Toast.LENGTH_SHORT);
                                                                         pujaExitosa.show();
+
+                                                                        boolean fragmentTransaction = false;
+
+                                                                        FragmentoPrincipal fragmentoPrincipal = new FragmentoPrincipal();
+                                                                        fragmentTransaction = true;
+
+                                                                        if(fragmentTransaction) {
+                                                                            getFragmentManager().beginTransaction().addToBackStack("fragmentoBuscar");
+                                                                            Fragment fragmentPrevio = getFragmentManager().findFragmentByTag("fragmentoBuscar");
+                                                                            getFragmentManager().beginTransaction()
+                                                                                    .replace(R.id.content_main, fragmentoPrincipal)
+                                                                                    .commit();
+
+                                                                            ((ProfileActivity)getActivity()).getSupportActionBar().setTitle("Pujas");
+
+                                                                            getFragmentManager().beginTransaction().remove(fragmentPrevio);
+                                                                        }
                                                                     }
                                                                     else if (((puja < pujaMaxima)) && ((puja != 0))) {
                                                                         Toast pujaMinima = Toast.makeText(getActivity().getApplicationContext(), "la puja debe ser mayor que " + pujaMaxima + " €", Toast.LENGTH_SHORT);
@@ -214,7 +238,22 @@ public class FragmentoBuscar extends Fragment {
                                                     Toast debesLogearte = Toast.makeText(getActivity().getApplicationContext(), "Debes logearte para poder pujar", Toast.LENGTH_SHORT);
                                                     debesLogearte.show();
 
-                                                    ((MainActivity)getActivity()).getSupportActionBar().setTitle("Login");
+                                                    boolean fragmentTransaction = false;
+
+                                                    FragmentoLogin fragmentoLogin = new FragmentoLogin();
+                                                    fragmentTransaction = true;
+
+                                                    if(fragmentTransaction) {
+                                                        getFragmentManager().beginTransaction().addToBackStack("fragmentoBuscar");
+                                                        Fragment fragmentPrevio = getFragmentManager().findFragmentByTag("fragmentoBuscar");
+                                                        getFragmentManager().beginTransaction()
+                                                                .replace(R.id.content_main, fragmentoLogin)
+                                                                .commit();
+
+                                                        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Login");
+
+                                                        getFragmentManager().beginTransaction().remove(fragmentPrevio);
+                                                    }
                                                 }
                                             }
                                         });

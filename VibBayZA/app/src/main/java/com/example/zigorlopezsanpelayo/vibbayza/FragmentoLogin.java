@@ -25,7 +25,7 @@ public class FragmentoLogin extends Fragment {
     protected String emailFormS;
     protected String passFormS;
     protected static boolean logeado;
-    protected String emailLogeado;
+    protected static String emailLogeado;
 
     DatabaseReference refUsuarios =
             FirebaseDatabase.getInstance().getReference()
@@ -90,12 +90,12 @@ public class FragmentoLogin extends Fragment {
         });
     }
 
-    public String getEmailLogeado() {
+    public static String getEmailLogeado() {
         return emailLogeado;
     }
 
-    public  void setEmailLogeado(String emailLogeado) {
-        this.emailLogeado = emailLogeado;
+    public  static void setEmailLogeado(String pEmailLogeado) {
+        emailLogeado = pEmailLogeado;
     }
 
     public static boolean getLogeado() {
