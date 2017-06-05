@@ -66,7 +66,8 @@ public class FragmentoPujasRecibidas extends Fragment {
                     else {
                         String nombreArticuloPujado = (String) snapshot.child("titulo").getValue();
                         String nombrePujador = (String) snapshot.child("email").getValue();
-                        double cantidad = Double.parseDouble(snapshot.child("cantidad").getValue().toString());
+                        double cantidad = ((Number)snapshot.child("cantidad").getValue()).doubleValue();
+
                         titulo = getArguments().getString("titulo");
 
                         if (nombreArticuloPujado.equals(titulo)) {
@@ -107,7 +108,7 @@ public class FragmentoPujasRecibidas extends Fragment {
                                         String titArt = (String) snapshot.child("titulo").getValue();
                                         String nombreImagen = (String) snapshot.child("nombreImagen").getValue();
                                         String email = (String) snapshot.child("email").getValue();
-                                        double precio = (double) snapshot.child("precio").getValue();
+                                        double precio = ((Number)snapshot.child("precio").getValue()).doubleValue();
                                         double pujaMaxima = (double) snapshot.child("pujaMaxima").getValue();
                                         if (titArt.equals(titulo)) {
                                             Articulos articuloActualizado = new Articulos(titArt, nombreImagen, email, true, precio, pujaMaxima);
@@ -121,6 +122,21 @@ public class FragmentoPujasRecibidas extends Fragment {
 
                                 }
                             });
+                            boolean fragmentTransaction = false;
+
+                            FragmentoArticulos fragmentoArticulos = new FragmentoArticulos();
+                            fragmentTransaction = true;
+
+                            if(fragmentTransaction) {
+                                getFragmentManager().beginTransaction().addToBackStack("pujasRecibidas");
+                                Fragment fragmentPrevio = getFragmentManager().findFragmentByTag("pujasRecibidas");
+                                getFragmentManager().beginTransaction()
+                                        .replace(R.id.content_main, fragmentoArticulos)
+                                        .commit();
+
+                                ((ProfileActivity)getActivity()).getSupportActionBar().setTitle("Artículos");
+                                getFragmentManager().beginTransaction().remove(fragmentPrevio);
+                            }
                         }
                     });
                     pujas.addView(botonCerrarPuja);

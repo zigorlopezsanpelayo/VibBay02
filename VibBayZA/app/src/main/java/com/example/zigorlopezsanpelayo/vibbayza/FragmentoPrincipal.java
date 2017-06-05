@@ -27,13 +27,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
+
 public class FragmentoPrincipal extends Fragment {
 
     protected boolean encontrado;
     protected TextView articuloEncontrado;
     protected LinearLayout arts;
     protected ImageView imagenArticulo;
-
+    protected String titulo;
     protected Button botonPujar;
     protected double pujaMaxima;
     protected long numPujas = 1;
@@ -88,8 +90,8 @@ public class FragmentoPrincipal extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     if (snapshot.child("estado").getValue().toString().equals("false")) {
-                        final String titulo = (String) snapshot.child("titulo").getValue();
-                        final double precio = (double) snapshot.child("precio").getValue();
+                        titulo = (String) snapshot.child("titulo").getValue();
+                        final double precio = ((Number)snapshot.child("precio").getValue()).doubleValue();
                         final String propietario = (String) snapshot.child("email").getValue();
                         final String nombreImagen = (String) snapshot.child("nombreImagen").getValue();
                         pujaMaxima = (double) snapshot.child("pujaMaxima").getValue();
@@ -118,12 +120,10 @@ public class FragmentoPrincipal extends Fragment {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                             for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                                                Log.i("String", titulo);
-
                                                 if (snapshot.child("titulo").getValue().toString().equals(titulo)) {
                                                     if ((Double.parseDouble(snapshot.child("cantidad").getValue().toString()) ) > pujaMaxima) {
                                                         pujaMaxima = Double.parseDouble(snapshot.child("cantidad").getValue().toString());
-                                                        Articulos articuloActualizado = new Articulos(titulo, nombreImagen, propietario, true, precio, pujaMaxima);
+                                                        Articulos articuloActualizado = new Articulos(titulo, nombreImagen, propietario, false, precio, pujaMaxima);
                                                         refArticulos.child(snapshot.getKey()).setValue(articuloActualizado);
                                                     }
                                                 }
@@ -157,7 +157,9 @@ public class FragmentoPrincipal extends Fragment {
                                                     catch (Exception e){
 
                                                     }
+                                                    DecimalFormat decim = new DecimalFormat("0.00");
                                                     double puja = Double.parseDouble(cantidadPuja.getText().toString());
+                                                    puja = Double.parseDouble(decim.format(puja));
                                                     String nombreUsuario = ((ProfileActivity)getActivity()).getNombreUsuario();
                                                     String nombreArticulo = botonPujar.getTag().toString();
                                                     if (nombreUsuario.equals(propietario)) {
@@ -172,6 +174,21 @@ public class FragmentoPrincipal extends Fragment {
                                                         aniadirPuja(numPujasS, nombreUsuario, puja, nombreArticulo);
                                                         Toast pujaExitosa = Toast.makeText(getActivity().getApplicationContext(), "Puja realizada correctamente", Toast.LENGTH_SHORT);
                                                         pujaExitosa.show();
+
+                                                        boolean fragmentTransaction = false;
+
+                                                        FragmentoPrincipal fragmentoPrincipal = new FragmentoPrincipal();
+                                                        fragmentTransaction = true;
+
+                                                        if(fragmentTransaction) {
+                                                            getFragmentManager().beginTransaction().addToBackStack("fragmentoPrincipal");
+                                                            Fragment fragmentPrevio = getFragmentManager().findFragmentByTag("fragmentoPrincipal");
+                                                            getFragmentManager().beginTransaction()
+                                                                    .replace(R.id.content_main, fragmentoPrincipal)
+                                                                    .commit();
+
+                                                            getFragmentManager().beginTransaction().remove(fragmentPrevio);
+                                                        }
                                                     }
                                                     else if (((puja < pujaMaxima)) && ((puja != 0))) {
                                                         Toast pujaMinima = Toast.makeText(getActivity().getApplicationContext(), "la puja debe ser mayor que " + pujaMaxima + " €", Toast.LENGTH_SHORT);

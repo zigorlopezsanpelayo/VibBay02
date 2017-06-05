@@ -33,7 +33,9 @@ public class FragmentoPujas extends Fragment {
     protected double precioInicial;
     protected ImageView imagenArticulo;
     protected double pujaMasAlta = 0;
-    protected String imagenB64;
+    protected String imagenB64 = "";
+    protected LinearLayout pujas;
+    protected LinearLayout puja;
 
     DatabaseReference refArticulos =
             FirebaseDatabase.getInstance().getReference()
@@ -57,7 +59,6 @@ public class FragmentoPujas extends Fragment {
 
     @Override
     public void onViewCreated (View v, Bundle savedInstanceState) {
-        final String emailUsuario = getActivity().getIntent().getExtras().getString("emailUsuario");
         refPujas.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -65,6 +66,7 @@ public class FragmentoPujas extends Fragment {
                     final String nombreArticuloPujado = (String) snapshot.child("titulo").getValue();
                     double cantidad = Double.parseDouble(snapshot.child("cantidad").getValue().toString());
                     String pujador = (String) snapshot.child("email").getValue();
+                    String emailUsuario = FragmentoLogin.getEmailLogeado();
 
                     if (pujador.equals(emailUsuario)) {
                         refArticulos.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -74,6 +76,44 @@ public class FragmentoPujas extends Fragment {
                                     if (nombreArticuloPujado.equals(snapshot.child("titulo").getValue().toString())) {
                                         precioInicial = (double) snapshot.child("precio").getValue();
                                         imagenB64 = (String) snapshot.child("nombreImagen").getValue();
+
+                                        refPujas.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot2) {
+                                                for (DataSnapshot snapshot: dataSnapshot2.getChildren()) {
+                                                    double cantidad = (double) snapshot.child("cantidad").getValue();
+                                                    if (cantidad > pujaMasAlta) {
+                                                        pujaMasAlta = cantidad;
+
+                                                        pujaEncontrada = new TextView(getActivity().getApplicationContext());
+                                                        pujaEncontrada.setText(nombreArticuloPujado + "\nPRECIO INICIAL: " + precioInicial + "\nTU PUJA MAS ALTA: " + cantidad + " €" + "\nPUJA MAS ALTA: " + pujaMasAlta + " €");
+                                                        pujaEncontrada.setBackgroundColor(Color.WHITE);
+                                                        pujaEncontrada.setTextColor(Color.BLACK);
+                                                        pujaEncontrada.setTextSize(30);
+                                                        byte[] imagenByte = Base64.decode(imagenB64, Base64.DEFAULT);
+                                                        Bitmap imagen = BitmapFactory.decodeByteArray(imagenByte , 0, imagenByte.length);
+                                                        imagenArticulo = new ImageView(getActivity().getApplicationContext());
+
+                                                        pujas = (LinearLayout) getView().findViewById(R.id.pujas_realizadas);
+                                                        puja = new LinearLayout(getActivity().getApplicationContext());
+
+                                                        puja.setOrientation(LinearLayout.HORIZONTAL);
+                                                        puja.setBackgroundColor(Color.parseColor("#E3F2FD"));
+                                                        puja.addView(pujaEncontrada);
+                                                        puja.addView(imagenArticulo);
+                                                        imagenArticulo.getLayoutParams().height = 350;
+                                                        imagenArticulo.getLayoutParams().width = 500;
+                                                        imagenArticulo.setImageBitmap(imagen);
+                                                        pujas.addView(puja);
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
                                     }
                                 }
                             }
@@ -83,42 +123,6 @@ public class FragmentoPujas extends Fragment {
 
                             }
                         });
-                        refPujas.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot2) {
-                                for (DataSnapshot snapshot: dataSnapshot2.getChildren()) {
-                                    double cantidad = (double) snapshot.child("cantidad").getValue();
-                                    if (cantidad > pujaMasAlta) {
-                                        pujaMasAlta = cantidad;
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-                        pujaEncontrada = new TextView(getActivity().getApplicationContext());
-                        pujaEncontrada.setText(nombreArticuloPujado + "\nPRECIO INICIAL: " + precioInicial + "\nTU PUJA MAS ALTA: " + cantidad + " €" + "\nPUJA MAS ALTA: " + pujaMasAlta + " €");
-                        pujaEncontrada.setBackgroundColor(Color.WHITE);
-                        pujaEncontrada.setTextColor(Color.BLACK);
-                        pujaEncontrada.setTextSize(30);
-                        byte[] imagenByte = Base64.decode(imagenB64, Base64.DEFAULT);
-                        Bitmap imagen = BitmapFactory.decodeByteArray(imagenByte , 0, imagenByte.length);
-                        imagenArticulo = new ImageView(getActivity().getApplicationContext());
-
-                        LinearLayout pujas = (LinearLayout) getView().findViewById(R.id.pujas_realizadas);
-                        LinearLayout puja = new LinearLayout(getActivity().getApplicationContext());
-
-                        puja.setOrientation(LinearLayout.HORIZONTAL);
-                        puja.setBackgroundColor(Color.parseColor("#E3F2FD"));
-                        puja.addView(pujaEncontrada);
-                        puja.addView(imagenArticulo);
-                        imagenArticulo.getLayoutParams().height = 350;
-                        imagenArticulo.getLayoutParams().width = 500;
-                        imagenArticulo.setImageBitmap(imagen);
-                        pujas.addView(puja);
                     }
                 }
             }
