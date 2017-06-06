@@ -6,14 +6,6 @@
             android:id="@+id/login"
             android:icon="@drawable/login"
             android:title="Login" />
-        <item
-            android:id="@+id/casoUso2"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="CasoUso2" />
-        <item
-            android:id="@+id/casoUso3"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="CasoUso3" />
     </group>
 
 </menu>

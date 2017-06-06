@@ -111,7 +111,6 @@ public class FragmentoBuscar extends Fragment {
                                 final String propietario = (String) snapshot.child("email").getValue();
                                 final String nombreImagen = (String) snapshot.child("nombreImagen").getValue();
                                 pujaMaxima = (double) snapshot.child("pujaMaxima").getValue();
-                                botonPujar = new Button();
 
                                 char[] tituloChar = titulo.toLowerCase().toCharArray();
                                 String tituloParcial = "";
@@ -146,8 +145,6 @@ public class FragmentoBuscar extends Fragment {
                                                                 if (snapshot.child("titulo").getValue().toString().equals(titulo)) {
                                                                     if ((Double.parseDouble(snapshot.child("cantidad").getValue().toString()) ) > pujaMaxima) {
                                                                         pujaMaxima = Double.parseDouble(snapshot.child("cantidad").getValue().toString());
-                                                                        Articulos articuloActualizado = new Articulos(titulo, nombreImagen, propietario, false, precio, pujaMaxima);
-                                                                        refArticulos.child(snapshot.getKey()).setValue(articuloActualizado);
                                                                     }
                                                                 }
 

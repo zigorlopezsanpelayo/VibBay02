@@ -94,7 +94,6 @@ public class FragmentoPrincipal extends Fragment {
                         final double precio = ((Number)snapshot.child("precio").getValue()).doubleValue();
                         final String propietario = (String) snapshot.child("email").getValue();
                         final String nombreImagen = (String) snapshot.child("nombreImagen").getValue();
-                        pujaMaxima = (double) snapshot.child("pujaMaxima").getValue();
 
                         String imagenB64 = (String) snapshot.child("nombreImagen").getValue();
                         byte[] imagenByte = Base64.decode(imagenB64, Base64.DEFAULT);
@@ -116,26 +115,8 @@ public class FragmentoPrincipal extends Fragment {
                             @Override
                             public void onClick(View v) {
                                 if (FragmentoLogin.getLogeado()) {
-                                    refPujas.addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                                                if (snapshot.child("titulo").getValue().toString().equals(titulo)) {
-                                                    if ((Double.parseDouble(snapshot.child("cantidad").getValue().toString()) ) > pujaMaxima) {
-                                                        pujaMaxima = Double.parseDouble(snapshot.child("cantidad").getValue().toString());
-                                                        Articulos articuloActualizado = new Articulos(titulo, nombreImagen, propietario, false, precio, pujaMaxima);
-                                                        refArticulos.child(snapshot.getKey()).setValue(articuloActualizado);
-                                                    }
-                                                }
 
-                                            }
-                                        }
 
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-
-                                        }
-                                    });
                                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
                                     alertDialog.setTitle("Puja");
                                     alertDialog.setMessage("Introduce tu puja");
@@ -209,6 +190,7 @@ public class FragmentoPrincipal extends Fragment {
                                             });
 
                                     alertDialog.show();
+
                                 }
                                 else {
                                     Toast debesLogearte = Toast.makeText(getActivity().getApplicationContext(), "Debes logearte para poder pujar", Toast.LENGTH_SHORT);

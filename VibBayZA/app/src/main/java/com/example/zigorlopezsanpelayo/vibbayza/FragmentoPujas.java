@@ -81,7 +81,7 @@ public class FragmentoPujas extends Fragment {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot2) {
                                                 for (DataSnapshot snapshot: dataSnapshot2.getChildren()) {
-                                                    double cantidad = (double) snapshot.child("cantidad").getValue();
+                                                    double cantidad = ((Number)snapshot.child("cantidad").getValue()).doubleValue();
                                                     if (cantidad > pujaMasAlta) {
                                                         pujaMasAlta = cantidad;
 
