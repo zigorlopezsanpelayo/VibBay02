@@ -2,6 +2,8 @@ package com.example.zigorlopezsanpelayo.vibbayza;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +53,8 @@ public class FragmentoAniadirArticulo extends Fragment {
     protected long numArts = 1;
     protected String numArtsS = "1";
 
+
+
     DatabaseReference refArticulos =
             FirebaseDatabase.getInstance().getReference()
                     .child("articulos");
@@ -68,6 +73,8 @@ public class FragmentoAniadirArticulo extends Fragment {
 
     public void onViewCreated (View v, Bundle savedInstanceState) {
         super.onViewCreated(v, savedInstanceState);
+
+        
 
         refArticulos.getParent().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -152,6 +159,7 @@ public class FragmentoAniadirArticulo extends Fragment {
         if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                     getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, permissionCheck);
+            requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 200);
             return false;
         } else {
             return true;
@@ -196,15 +204,6 @@ public class FragmentoAniadirArticulo extends Fragment {
     private void aniadirArticulo(String artId, String titulo, String foto, String propietario, boolean estado, double precio) {
         Articulos articulo = new Articulos(titulo, foto, propietario, estado, precio, 0.99);
         refArticulos.child(artId).setValue(articulo);
-    }
-
-    public static double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
-        long factor = (long) Math.pow(10, places);
-        value = value * factor;
-        long tmp = Math.round(value);
-        return (double) tmp / factor;
     }
 
 }

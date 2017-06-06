@@ -154,10 +154,6 @@ public class ProfileActivity extends AppCompatActivity
 
         if (id == R.id.logout) {
 
-        } else if (id == R.id.articulos) {
-
-        } else if (id == R.id.casoUso3) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

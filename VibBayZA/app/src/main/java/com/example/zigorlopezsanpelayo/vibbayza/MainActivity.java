@@ -101,10 +101,6 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.login) {
 
-        } else if (id == R.id.casoUso2) {
-
-        } else if (id == R.id.casoUso3) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
